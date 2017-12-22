@@ -10,11 +10,10 @@ import java.util.stream.IntStream;
  */
 public class ContextGenerator extends ContextLoader {
 
-    private Scanner sc;
-
     public ContextGenerator() {
-        sc = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         try {
+            System.out.println("Nouveau contexte");
             System.out.println("Entrez la taille des bins");
             binSize = sc.nextInt();
             System.out.println("Entrez le nombre de bins");
@@ -23,10 +22,10 @@ public class ContextGenerator extends ContextLoader {
             int val = sc.nextInt();
             switch (val) {
                 case 1:
-                    buildUniform(size);
+                    buildUniform(size, sc);
                     break;
                 case 2:
-                    buildGaussian(size);
+                    buildGaussian(size, sc);
                     break;
                 default:
                     throw new InputMismatchException();
@@ -37,10 +36,9 @@ public class ContextGenerator extends ContextLoader {
             sc.close();
             System.exit(1);
         }
-        sc.close();
     }
 
-    private void buildUniform(int size) {
+    private void buildUniform(int size, Scanner sc) {
         System.out.println("Entrez la taille minimale des paquets (incluse)");
         int minSize = sc.nextInt();
         System.out.println("Entrez la taille maximale des paquets (excluse)");
@@ -48,7 +46,7 @@ public class ContextGenerator extends ContextLoader {
         binObjects = new Random().ints(size, minSize, maxSize).boxed().collect(Collectors.toList());
     }
 
-    private void buildGaussian(int size) {
+    private void buildGaussian(int size, Scanner sc) {
         System.out.println("Entrez la moyenne");
         int mean = sc.nextInt();
         System.out.println("Entrez l'écart-type");
