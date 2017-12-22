@@ -73,7 +73,6 @@ public class Invoker {
                     long write = bins.stream().mapToLong(bin -> ((BenchableBin) bin).getNbWrite()).sum();
                     output.println("\t\t Nombres de lectures " + read);
                     output.println("\t\t Nombres d'écritures " + write);
-
                 }
                 output.println();
             }

@@ -75,7 +75,7 @@ public class ContextGenerator extends ContextLoader {
             if (binObjects.get(i) > binSize) {
                 binObjects.set(i, binSize);
             } else if (binObjects.get(i) < 1) {
-                binObjects.set(binObjects.get(i), 0);
+                binObjects.set(i, 0);
             }
         }
     }
