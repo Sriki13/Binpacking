@@ -53,8 +53,13 @@ public class Invoker {
         strategies.add(new AlmostWorstFitStrategy());
     }
 
-    public void applyStrategies() {
-        binFactory = new ConcreteBinFactory();
+    public void applyStrategies(boolean bench) {
+        if (bench) {
+            binFactory = new BenchableBinFactory();
+        }
+        else {
+            binFactory = new ConcreteBinFactory();
+        }
         for (Context context : contexts) {
             output.println("Chargement du contexte " + context.toString() + "\n");
             for (BinPackingStrategy strategy : strategies) {
@@ -63,6 +68,13 @@ public class Invoker {
                 List<Bin> bins = strategy.pack(context,binFactory);
                 output.println("\tExécution en " + (System.nanoTime()  - start) + " nanosecondes");
                 output.println("\tBins remplies: " + bins.size());
+                if (bench) {
+                    long read = bins.stream().mapToLong(bin -> ((BenchableBin) bin).getNbRead()).sum();
+                    long write = bins.stream().mapToLong(bin -> ((BenchableBin) bin).getNbWrite()).sum();
+                    output.println("\t\t Nombres de lectures " + read);
+                    output.println("\t\t Nombres d'écritures " + write);
+
+                }
                 output.println();
             }
             output.println("----------------------------------------------------------------------");

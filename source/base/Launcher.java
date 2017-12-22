@@ -17,6 +17,7 @@ public class Launcher {
     private final static String EXAMPLES_PATH = "exemples";
 
     private boolean randomFlag;
+    private boolean benchFlag;
     private String path;
     private PrintStream out;
     private InputStream in;
@@ -25,7 +26,9 @@ public class Launcher {
         this.out = out;
         this.in = in;
         randomFlag = false;
+        benchFlag = false;
     }
+
 
     public void manageArgs(String[] args) {
         for (String arg : args) {
@@ -33,6 +36,9 @@ public class Launcher {
                 path = arg;
             } else if (arg.equals("-random")) {
                 randomFlag = true;
+            }
+            else if (arg.equals("-bench")) {
+                benchFlag = true;
             } else {
                 throw new RuntimeException("Argument invalide: " + arg);
             }
@@ -63,7 +69,7 @@ public class Launcher {
             List<File> examples = Arrays.asList(dir.listFiles());
             invoker = new Invoker(out, examples);
         }
-        invoker.applyStrategies();
+        invoker.applyStrategies(benchFlag);
     }
 
 
