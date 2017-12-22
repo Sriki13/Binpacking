@@ -24,6 +24,7 @@ public class FirstFitStrategy implements BinPackingStrategy {
         boolean inserted = true;
         bins.insert(new Bin(context.binSize));
         for (int object : context.objects) {
+            // todo vérifier si l'itérator de la classe BST n'est pas en N (et bien en log(n) ...)
             for (Bin bin : bins) {
                 if (bin.fits(object)) {
                     bin.add(object);
