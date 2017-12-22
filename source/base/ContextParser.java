@@ -12,20 +12,18 @@ import java.util.regex.Pattern;
 /**
  * @author Guillaume Andre
  */
-public class ContextParser implements ContextLoader {
+public class ContextParser extends ContextLoader {
 
-    private int parsedSize;
-    private List<Integer> parsedObjects;
 
     public ContextParser(File input) throws IOException {
-        parsedObjects = new ArrayList<>();
+        binObjects = new ArrayList<>();
         BufferedReader br = new BufferedReader(new FileReader(input));
 
         // Saut de la ligne "Taille bin"
         br.readLine();
 
         // Lecture de la taille des bins
-        parsedSize = Integer.parseInt(br.readLine());
+        binSize = Integer.parseInt(br.readLine());
 
         // Saut de la ligne "Objets"
         br.readLine();
@@ -37,19 +35,8 @@ public class ContextParser implements ContextLoader {
         while ((line = br.readLine()) != null) {
             matcher = number.matcher(line);
             while (matcher.find()) {
-                parsedObjects.add(Integer.parseInt(matcher.group()));
+                binObjects.add(Integer.parseInt(matcher.group()));
             }
         }
     }
-
-    @Override
-    public int getBinSize() {
-        return parsedSize;
-    }
-
-    @Override
-    public List<Integer> getObjects() {
-        return parsedObjects;
-    }
-
 }

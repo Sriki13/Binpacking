@@ -5,10 +5,17 @@ import java.util.List;
 /**
  * @author Guillaume Andre
  */
-public interface ContextLoader {
+public abstract class ContextLoader {
 
-    int getBinSize();
+    protected int binSize;
+    protected List<Integer> binObjects;
 
-    List<Integer> getObjects();
+    public int getBinSize() {
+        return binSize;
+    }
+
+    public List<Integer> getObjects() {
+        return binObjects;
+    }
 
 }
