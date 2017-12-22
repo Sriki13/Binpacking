@@ -36,8 +36,10 @@ public class Invoker {
         this.output = output;
         loadDefaultStrategies();
         contexts = new ArrayList<>();
-        for (int i = 0; i < amount; i++) {
-            contexts.add(new Context(new ContextGenerator()));
+        ContextGenerator cg = new ContextGenerator();
+        contexts.add(new Context(cg));
+        for (int i = 1; i < amount; i++) {
+            contexts.add(new Context(cg.cloneMethod()));
         }
     }
 
