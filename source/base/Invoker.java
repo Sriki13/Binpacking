@@ -17,6 +17,7 @@ public class Invoker {
     private List<Context> contexts;
     private List<BinPackingStrategy> strategies;
     private PrintStream output;
+    private BinFactory binFactory;
 
     public Invoker(PrintStream output, List<File> examples) throws FileNotFoundException {
         this.output = output;
@@ -53,12 +54,13 @@ public class Invoker {
     }
 
     public void applyStrategies() {
+        binFactory = new ConcreteBinFactory();
         for (Context context : contexts) {
             output.println("Chargement du contexte " + context.toString() + "\n");
             for (BinPackingStrategy strategy : strategies) {
                 output.println("\tApplication de la stratégie " + strategy.toString());
                 long start = System.nanoTime();
-                List<Bin> bins = strategy.pack(context);
+                List<Bin> bins = strategy.pack(context,binFactory);
                 output.println("\tExécution en " + (System.nanoTime()  - start) + " nanosecondes");
                 output.println("\tBins remplies: " + bins.size());
                 output.println();

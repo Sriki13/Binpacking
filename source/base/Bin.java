@@ -1,22 +1,8 @@
 package base;
 
-/**
- * @author Guillaume Andre
- */
-public class Bin {
+public interface Bin {
 
-    private int capacityLeft;
+    boolean fits(int object);
 
-    public Bin(int capacity) {
-        capacityLeft = capacity;
-    }
-
-    public boolean fits(int object) {
-        return capacityLeft - object > 0;
-    }
-
-    public void add(int object) {
-        capacityLeft -= object;
-    }
-
+    void add(int object);
 }
