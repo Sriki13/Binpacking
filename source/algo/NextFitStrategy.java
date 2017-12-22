@@ -21,6 +21,7 @@ public class NextFitStrategy implements BinPackingStrategy {
             } else {
                 bins.add(current);
                 current = new Bin(context.binSize);
+                current.add(object);
             }
         }
         return bins;
