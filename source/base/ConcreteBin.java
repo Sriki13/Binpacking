@@ -19,4 +19,8 @@ public class ConcreteBin implements Bin {
         capacityLeft -= object;
     }
 
+    @Override
+    public int compareTo(Bin o) {
+        return this.capacityLeft - ((ConcreteBin) o).capacityLeft;
+    }
 }

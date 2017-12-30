@@ -23,7 +23,7 @@ public class FirstFitStrategy implements BinPackingStrategy {
     public List<Bin> pack(Context context, BinFactory binFactory) {
         BinarySearchTree<Bin> bins = new BinarySearchTree<>();
         boolean inserted = true;
-        bins.insert(new Bin(context.binSize));
+        bins.insert(binFactory.createBin(context.binSize));
         for (int object : context.objects) {
             // todo vérifier si l'itérator de la classe BST n'est pas en N (et bien en log(n) ...)
             for (Bin bin : bins) {
@@ -34,7 +34,7 @@ public class FirstFitStrategy implements BinPackingStrategy {
             if (!inserted) {
                 // une fois sorti de la boucle,
                 // nouveau bin où l'on va ajouter l'objet
-                Bin tmp = new Bin(context.binSize);
+                Bin tmp = binFactory.createBin(context.binSize);
                 tmp.add(object);
                 bins.insert(tmp);
             }
