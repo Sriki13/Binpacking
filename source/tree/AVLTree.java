@@ -1,53 +1,12 @@
 package tree;
 
 import base.Bin;
-import base.ConcreteBin;
-
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
 
 import static java.lang.Math.abs;
 
 public class AVLTree {
 
     private Node root;
-    private Comparator<Bin> comparator;
-
-    public AVLTree(Comparator<Bin> comparator) {
-        this.comparator = comparator;
-    }
-
-    public static void main(String[] args) {
-        AVLTree rbst = new AVLTree(new ComparatorNotFirstFit());
-        rbst.insert(new ConcreteBin(10, 0));
-        rbst.insert(new ConcreteBin(9, 1));
-        rbst.insert(new ConcreteBin(8, 2));
-        rbst.insert(new ConcreteBin(7, 3));
-        rbst.insert(new ConcreteBin(6, 4));
-        rbst.insert(new ConcreteBin(5, 5));
-        rbst.insert(new ConcreteBin(4, 6));
-        rbst.insert(new ConcreteBin(2, 7));
-        rbst.insert(new ConcreteBin(11, 8));
-        rbst.insert(new ConcreteBin(12, 9));
-        rbst.insert(new ConcreteBin(12, 10));
-        rbst.insert(new ConcreteBin(12, 11));
-        rbst.insert(new ConcreteBin(12, 12));
-        rbst.insert(new ConcreteBin(12, 13));
-        rbst.insert(new ConcreteBin(12, 14));
-        rbst.display();
-//        rbst.delete(new ConcreteBin(2, 7));
-//        rbst.display();
-//        rbst.delete(new ConcreteBin(11, 8));
-//        rbst.delete(new ConcreteBin(8, 2));
-//        rbst.display();
-        //System.out.println(rbst.searchBestBin(3));
-        for (int i = 0; i <= 13; i++) {
-            System.out.println(i);
-            System.out.println(rbst.searchFirstBin(i));
-        }
-    }
 
     private int height(Node node) {
         if (node == null)
@@ -65,7 +24,7 @@ public class AVLTree {
             return (new Node(value));
         }
 
-        if (this.comparator.compare(value, node.bin) < 0)
+        if (value.compareTo(node.bin) < 0)
             node.left = insert(node.left, value);
         else
             node.right = insert(node.right, value);
@@ -80,21 +39,21 @@ public class AVLTree {
         // If this node becomes unbalanced, then there are 4 cases
 
         // Left Left Case
-        if (balance > 1 && this.comparator.compare(value, node.left.bin) < 0)
+        if (balance > 1 && value.compareTo(node.left.bin) < 0)
             return rightRotate(node);
 
         // Right Right Case
-        if (balance < -1 && this.comparator.compare(value, node.right.bin) > 0)
+        if (balance < -1 && value.compareTo(node.right.bin) > 0)
             return leftRotate(node);
 
         // Left Right Case
-        if (balance > 1 && this.comparator.compare(value, node.left.bin) > 0) {
+        if (balance > 1 && value.compareTo(node.left.bin) > 0) {
             node.left = leftRotate(node.left);
             return rightRotate(node);
         }
 
         // Right Left Case
-        if (balance < -1 && this.comparator.compare(value, node.right.bin) < 0) {
+        if (balance < -1 && value.compareTo(node.right.bin) < 0) {
             node.right = rightRotate(node.right);
             return leftRotate(node);
         }
@@ -161,12 +120,12 @@ public class AVLTree {
 
         // If the bin to be deleted is smaller than the root's bin,
         // then it lies in left subtree
-        if (this.comparator.compare(value, root.bin) < 0)
+        if (value.compareTo(root.bin) < 0)
             root.left = deleteNode(root.left, value);
 
             // If the bin to be deleted is greater than the root's bin,
             // then it lies in right subtree
-        else if (this.comparator.compare(value, root.bin) > 0)
+        else if (value.compareTo(root.bin) > 0)
             root.right = deleteNode(root.right, value);
 
             // if bin is same as root's bin, then This is the node
@@ -183,12 +142,10 @@ public class AVLTree {
 
                 // No child case
                 if (temp == null) {
-                    temp = root;
                     root = null;
                 } else // One child case
                     root = temp; // Copy the contents of the non-empty child
 
-                temp = null;
             } else {
                 // node with two children: Get the inorder successor (smallest
                 // in the right subtree)
@@ -236,10 +193,6 @@ public class AVLTree {
         }
 
         return root;
-    }
-
-    public void display() {
-        display(root, "", "");
     }
 
     public Bin searchFirstBin(int size) {
@@ -337,42 +290,5 @@ public class AVLTree {
             second = node;
         }
         return searchAlmostWorstBin(size, node.right, second);
-    }
-
-    private String makeString(char c, int k) {
-        String s = "";
-        for (int i = 0; i < k; i++) {
-            s += c;
-        }
-        return s;
-    }
-
-    ////////////////////////////////////////////////////
-    // Convenience methods to build a list of integer from a string
-    ////////////////////////////////////////////////////
-
-    private static List<Integer> read(String inputString) {
-        List<Integer> list = new LinkedList<Integer>();
-        Scanner input = new Scanner(inputString);
-        while (input.hasNextInt())
-            list.add(input.nextInt());
-        input.close();
-        return list;
-    }
-
-    private void display(Node t, String r, String p) {
-        if (t == null) {
-            System.out.println(r);
-        } else {
-            String rs = t.bin.toString();
-            rs = "(" + t.height + ")" + rs;
-            System.out.println(r + rs);
-            if (t.left != null || t.right != null) {
-                String rr = p + '|' + makeString('_', rs.length()) + ' ';
-                display(t.right, rr, p + '|' + makeString(' ', rs.length() + 1));
-                System.out.println(p + '|');
-                display(t.left, rr, p + makeString(' ', rs.length() + 2));
-            }
-        }
     }
 }
