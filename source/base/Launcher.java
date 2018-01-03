@@ -9,9 +9,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-/**
- * @author Guillaume Andre
- */
 public class Launcher {
 
     private final static String EXAMPLES_PATH = "exemples";
@@ -71,6 +68,5 @@ public class Launcher {
         }
         invoker.applyStrategies(benchFlag);
     }
-
 
 }

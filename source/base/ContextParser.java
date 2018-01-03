@@ -5,15 +5,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * @author Guillaume Andre
- */
 public class ContextParser extends ContextLoader {
-
 
     public ContextParser(File input) throws IOException {
         binObjects = new ArrayList<>();
@@ -39,4 +34,5 @@ public class ContextParser extends ContextLoader {
             }
         }
     }
+
 }

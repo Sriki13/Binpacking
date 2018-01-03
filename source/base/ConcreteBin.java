@@ -1,8 +1,5 @@
 package base;
 
-/**
- * @author Guillaume Andre
- */
 public class ConcreteBin implements Bin {
 
     private int capacityLeft;
@@ -23,4 +20,5 @@ public class ConcreteBin implements Bin {
     public int compareTo(Bin o) {
         return this.capacityLeft - ((ConcreteBin) o).capacityLeft;
     }
+
 }

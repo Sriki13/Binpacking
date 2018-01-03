@@ -1,6 +1,8 @@
 package tree;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
 
 public class RankedBST<AnyType extends Comparable<? super AnyType>> {
 
@@ -132,7 +134,7 @@ public class RankedBST<AnyType extends Comparable<? super AnyType>> {
      * @return the new root of the subtree.
      */
     private BinaryNode<AnyType> insert(AnyType x, BinaryNode<AnyType> t) {
-        if (t == null) return new BinaryNode<AnyType>(x);
+        if (t == null) return new BinaryNode<>(x);
         int cmp = x.compareTo(t.element);
         if (cmp < 0) {
             t.left = insert(x, t.left);

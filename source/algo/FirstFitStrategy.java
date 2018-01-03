@@ -5,12 +5,8 @@ import base.BinFactory;
 import base.Context;
 import tree.BinarySearchTree;
 
-import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Guillaume Andre
- */
 public class FirstFitStrategy implements BinPackingStrategy {
 
     /**

@@ -2,9 +2,6 @@ package base;
 
 import java.util.List;
 
-/**
- * @author Guillaume Andre
- */
 public abstract class ContextLoader {
 
     protected int binSize;

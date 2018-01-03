@@ -1,7 +1,8 @@
 package base;
 
-import java.io.PrintStream;
-import java.util.*;
+import java.util.InputMismatchException;
+import java.util.Random;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -79,4 +80,5 @@ public class ContextGenerator extends ContextLoader {
             }
         }
     }
+
 }

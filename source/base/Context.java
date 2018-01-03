@@ -3,9 +3,6 @@ package base;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * @author Guillaume Andre
- */
 public class Context {
 
     public int binSize;
@@ -21,6 +18,5 @@ public class Context {
         return "Bins de taille " + binSize + " avec " + objects.size() + " objets " +
                 "de taille " + Collections.min(objects) + " à " + Collections.max(objects);
     }
-
 
 }

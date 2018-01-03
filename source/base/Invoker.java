@@ -9,15 +9,11 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Guillaume Andre
- */
 public class Invoker {
 
     private List<Context> contexts;
     private List<BinPackingStrategy> strategies;
     private PrintStream output;
-    private BinFactory binFactory;
 
     public Invoker(PrintStream output, List<File> examples) throws FileNotFoundException {
         this.output = output;
@@ -54,6 +50,7 @@ public class Invoker {
     }
 
     public void applyStrategies(boolean bench) {
+        BinFactory binFactory;
         if (bench) {
             binFactory = new BenchableBinFactory();
         }
@@ -65,7 +62,7 @@ public class Invoker {
             for (BinPackingStrategy strategy : strategies) {
                 output.println("\tApplication de la stratégie " + strategy.toString());
                 long start = System.nanoTime();
-                List<Bin> bins = strategy.pack(context,binFactory);
+                List<Bin> bins = strategy.pack(context, binFactory);
                 output.println("\tExécution en " + (System.nanoTime()  - start) + " nanosecondes");
                 output.println("\tBins remplies: " + bins.size());
                 if (bench) {
