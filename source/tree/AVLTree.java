@@ -232,12 +232,36 @@ public class AVLTree {
         return root;
     }
 
-    public Bin searchBestBin(int size) {
-        return searchBestBin(size, root, null);
-    }
-
     public void display() {
         display(root, "", "");
+    }
+
+    public Bin searchFirstBin(int size) {
+        return searchFirstBin(size, root);
+    }
+
+    private Bin searchFirstBin(int size, Node node) {
+        if (node == null) {
+            return null;
+        }
+        if (!node.bin.fits(size)) {
+            return searchFirstBin(size, node.right);
+        }
+        if (node.bin.getCapacityLeft() == size) {
+            if (node.left != null && node.left.bin.getCapacityLeft() == size) {
+                return searchFirstBin(size, node.left);
+            } else {
+                return node.bin;
+            }
+        }
+        if (node.left == null) {
+            return node.bin;
+        }
+        return searchFirstBin(size, node.left);
+    }
+
+    public Bin searchBestBin(int size) {
+        return searchBestBin(size, root, null);
     }
 
     private Bin searchBestBin(int size, Node node, Node best) {

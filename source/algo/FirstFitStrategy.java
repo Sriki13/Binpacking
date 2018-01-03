@@ -3,7 +3,7 @@ package algo;
 import base.Bin;
 import base.BinFactory;
 import base.Context;
-import tree.BinarySearchTree;
+import tree.AVLTree;
 
 public class FirstFitStrategy implements BinPackingStrategy {
 
@@ -15,24 +15,16 @@ public class FirstFitStrategy implements BinPackingStrategy {
      */
     @Override
     public void pack(Context context, BinFactory binFactory) {
-        BinarySearchTree<Bin> bins = new BinarySearchTree<>();
-        boolean inserted = true;
-        bins.insert(binFactory.createBin(context.binSize));
+        AVLTree tree = new AVLTree();
         for (int object : context.objects) {
-            // todo vérifier si l'itérator de la classe BST n'est pas en N (et bien en log(n) ...)
-            for (Bin bin : bins) {
-                if (bin.fits(object)) {
-                    bin.add(object);
-                }
+            Bin bin = tree.searchFirstBin(object);
+            if (bin == null) {
+                bin = binFactory.createBin(context.binSize);
+            } else {
+                tree.delete(bin);
             }
-            if (!inserted) {
-                // une fois sorti de la boucle,
-                // nouveau bin où l'on va ajouter l'objet
-                Bin tmp = binFactory.createBin(context.binSize);
-                tmp.add(object);
-                bins.insert(tmp);
-            }
-            inserted = false;
+            bin.add(object);
+            tree.insert(bin);
         }
 
     }
