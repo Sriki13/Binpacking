@@ -45,7 +45,7 @@ public class AVLTree {
         //System.out.println(rbst.searchBestBin(3));
         for (int i = 0; i <= 13; i++) {
             System.out.println(i);
-            System.out.println(rbst.searchAlmostWorstBin(i));
+            System.out.println(rbst.searchFirstBin(i));
         }
     }
 
@@ -80,7 +80,7 @@ public class AVLTree {
         // If this node becomes unbalanced, then there are 4 cases
 
         // Left Left Case
-        if (balance > 1 && this.comparator.compare(value, node.left.bin) < 0 )
+        if (balance > 1 && this.comparator.compare(value, node.left.bin) < 0)
             return rightRotate(node);
 
         // Right Right Case
@@ -243,27 +243,33 @@ public class AVLTree {
     }
 
     public Bin searchFirstBin(int size) {
-        return searchFirstBin(size, root);
+        return searchFirstBin(size, root, null);
     }
 
-    private Bin searchFirstBin(int size, Node node) {
+    private Bin searchFirstBin(int size, Node node, Node min) {
         if (node == null) {
+            if (min != null) {
+                return min.bin;
+            }
             return null;
         }
         if (!node.bin.fits(size)) {
-            return searchFirstBin(size, node.right);
+            return searchFirstBin(size, node.right, min);
         }
         if (node.bin.getCapacityLeft() == size) {
             if (node.left != null && node.left.bin.getCapacityLeft() == size) {
-                return searchFirstBin(size, node.left);
+                return searchFirstBin(size, node.left, null);
             } else {
                 return node.bin;
             }
         }
-        if (node.left == null) {
-            return node.bin;
+        if (min == null || node.bin.getIndex() < min.bin.getIndex()) {
+            min = node;
         }
-        return searchFirstBin(size, node.left);
+        if (node.left == null) {
+            return min.bin;
+        }
+        return searchFirstBin(size, node.left, min);
     }
 
     public Bin searchBestBin(int size) {
@@ -296,7 +302,9 @@ public class AVLTree {
         return searchBestBin(size, node.left, best);
     }
 
-    public Bin searchWorstBin(int size) { return searchWorstBin(size, root);}
+    public Bin searchWorstBin(int size) {
+        return searchWorstBin(size, root);
+    }
 
     private Bin searchWorstBin(int size, Node node) {
         if (node == null) {
