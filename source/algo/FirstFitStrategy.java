@@ -1,11 +1,8 @@
 package algo;
 
 import base.Bin;
-import base.BinFactory;
-import base.Context;
-import tree.AVLTree;
 
-public class FirstFitStrategy implements BinPackingStrategy {
+public class FirstFitStrategy extends TreeStrategy {
 
     /**
      * On utilise un BST pour les bins pour avoir une complexité
@@ -14,20 +11,8 @@ public class FirstFitStrategy implements BinPackingStrategy {
      * d'où la complexité de cet algorithme en n * log(n)
      */
     @Override
-    public void pack(Context context, BinFactory binFactory) {
-
-        AVLTree tree = new AVLTree();
-        for (int object : context.objects) {
-            Bin bin = tree.searchFirstBin(object);
-            if (bin == null) {
-                bin = binFactory.createBin(context.binSize);
-            } else {
-                tree.delete(bin);
-            }
-            bin.add(object);
-            tree.insert(bin);
-        }
-
+    public Bin getNextBin(int size) {
+        return tree.searchFirstBin(size);
     }
 
     @Override
