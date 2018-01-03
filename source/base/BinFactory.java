@@ -1,7 +1,9 @@
 package base;
 
-public interface BinFactory {
+public abstract class BinFactory {
 
-    Bin createBin(int binSize);
+    protected int index = 0;
+
+    public abstract Bin createBin(int binSize);
 
 }

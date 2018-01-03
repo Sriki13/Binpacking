@@ -328,7 +328,7 @@ public class BinarySearchTree<AnyType extends Comparable<? super AnyType>> imple
     }
 
     ////////////////////////////////////////////////////
-    // Inner class BinaryNode<AnyType>
+    // Inner class AvlNode<AnyType>
     ////////////////////////////////////////////////////
 
     private String makeString(char c, int k) {

@@ -6,4 +6,8 @@ public interface Bin extends Comparable<Bin> {
 
     void add(int object);
 
+    int getCapacityLeft();
+
+    int getIndex();
+
 }

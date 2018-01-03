@@ -8,7 +8,7 @@ public class BenchableBin implements Bin {
 
     public BenchableBin(Bin bin) {
         this.bin = bin;
-        nbWrite = 0;
+        nbWrite = 1;
         nbRead = 0;
     }
 
@@ -22,18 +22,27 @@ public class BenchableBin implements Bin {
         bin.add(object);
     }
 
+    @Override
+    public int getCapacityLeft() {
+        return bin.getCapacityLeft();
+    }
+
+    @Override
+    public int getIndex() {
+        return bin.getIndex();
+    }
+
     public int getNbRead() {return nbRead;}
 
     public int getNbWrite() {return nbWrite;}
 
-    /**
-     * Compares this object with the specified object for order.  Returns a
-     * negative integer, zero, or a positive integer as this object is less
-     * than, equal to, or greater than the specified object.
-     */
     @Override
     public int compareTo(Bin o) {
-        return 0;
+        if (o instanceof ConcreteBin) {
+            return bin.compareTo(o);
+        }
+        else {
+            return bin.compareTo(((BenchableBin) o).bin);
+        }
     }
-
 }
