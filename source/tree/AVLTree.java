@@ -2,8 +2,6 @@ package tree;
 
 import base.Bin;
 
-import static java.lang.Math.abs;
-
 public class AVLTree {
 
     private Node root;
@@ -226,33 +224,27 @@ public class AVLTree {
     }
 
     public Bin searchBestBin(int size) {
-        return searchBestBin(size, root, null);
+        return searchBestBin(size, root);
     }
 
-    private Bin searchBestBin(int size, Node node, Node best) {
+    private Bin searchBestBin(int size, Node node) {
         if (node == null) {
-            if (best != null) {
-                return best.bin;
-            }
             return null;
         }
         if (!node.bin.fits(size)) {
-            return searchBestBin(size, node.right, best);
+            return searchBestBin(size, node.right);
         }
         if (node.bin.getCapacityLeft() == size) {
             if (node.left != null && node.left.bin.getCapacityLeft() == size) {
-                return searchBestBin(size, node.left, null);
+                return searchBestBin(size, node.left);
             } else {
                 return node.bin;
             }
         }
-        if (best == null || abs(size - node.bin.getCapacityLeft()) < abs(size - best.bin.getCapacityLeft())) {
-            best = node;
+        if (node.left != null && node.left.bin.fits(size)) {
+            return searchBestBin(size, node.left);
         }
-        if (node.left == null) {
-            return best.bin;
-        }
-        return searchBestBin(size, node.left, best);
+        return node.bin;
     }
 
     public Bin searchWorstBin(int size) {
