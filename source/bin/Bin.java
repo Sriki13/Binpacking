@@ -1,4 +1,4 @@
-package base;
+package bin;
 
 public interface Bin extends Comparable<Bin> {
 

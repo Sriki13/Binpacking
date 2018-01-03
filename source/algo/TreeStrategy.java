@@ -1,9 +1,9 @@
 package algo;
 
 
-import base.Bin;
-import base.BinFactory;
-import base.Context;
+import bin.Bin;
+import bin.BinFactory;
+import context.Context;
 import tree.AVLTree;
 
 public abstract class TreeStrategy implements BinPackingStrategy {
@@ -30,6 +30,13 @@ public abstract class TreeStrategy implements BinPackingStrategy {
         }
     }
 
+    /**
+     * Récupère la bin suivante devant accepter l'objet selon l'algorithme.
+     * Retourne null si aucune bin ne convient.
+     *
+     * @param size la taille de l'objet à rentrer
+     * @return la bin devant l'accepter, ou null si aucune ne convient
+     */
     public abstract Bin getNextBin(int size);
 
 }

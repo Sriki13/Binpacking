@@ -1,11 +1,22 @@
 package algo;
 
-import base.Bin;
-import base.BinFactory;
-import base.Context;
+import bin.Bin;
+import bin.BinFactory;
+import context.Context;
 
+/**
+ * On remplit les bins d'objets en net raitant qu'une bin à la fois.
+ * Si celle ci ne peut pas accueillir d'objets, une nouvelle bin est crée
+ * et l'ancienne bin ne sera pas considérée pour les objets suivants.
+ */
 public class NextFitStrategy implements BinPackingStrategy {
 
+    /**
+     * Crée et remplit les bins d'objets.
+     *
+     * @param context    le contexte détaillant les bins et objets disponibles
+     * @param binFactory la factory utilisée pour créer les bins
+     */
     @Override
     public void pack(Context context, BinFactory binFactory) {
         Bin current = binFactory.createBin(context.binSize);

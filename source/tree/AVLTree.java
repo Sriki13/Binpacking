@@ -1,6 +1,6 @@
 package tree;
 
-import base.Bin;
+import bin.Bin;
 
 import static java.lang.Math.abs;
 

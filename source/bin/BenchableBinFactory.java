@@ -1,4 +1,4 @@
-package base;
+package bin;
 
 public class BenchableBinFactory extends BinFactory {
 

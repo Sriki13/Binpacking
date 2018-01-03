@@ -1,4 +1,4 @@
-package base;
+package bin;
 
 public class ConcreteBin implements Bin {
 

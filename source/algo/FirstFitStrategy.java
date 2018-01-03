@@ -1,14 +1,19 @@
 package algo;
 
-import base.Bin;
+import bin.Bin;
 
+/**
+ * On remplit les bins en placant les objets successivement dans les bins d'indice de
+ * plus bas où ils peuvent rentrer. Une nouvelle bin est crée si acune ne convient.
+ */
 public class FirstFitStrategy extends TreeStrategy {
 
     /**
-     * On utilise un BST pour les bins pour avoir une complexité
-     * de recherche du premier bin pouvant stocker l'objet en log(n) (n = taille de l'arbre)
-     * Pour le worst case, on aura N objets dans M bins d'où N = M,
-     * d'où la complexité de cet algorithme en n * log(n)
+     * Récupère la bin suivante devant accepter l'objet selon l'algorithme.
+     * Retourne null si aucune bin ne convient.
+     *
+     * @param size la taille de l'objet à rentrer
+     * @return la bin devant l'accepter, ou null si aucune ne convient
      */
     @Override
     public Bin getNextBin(int size) {

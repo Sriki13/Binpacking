@@ -1,4 +1,4 @@
-package base;
+package context;
 
 import java.util.InputMismatchException;
 import java.util.Random;
