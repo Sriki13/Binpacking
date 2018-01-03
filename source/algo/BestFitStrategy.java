@@ -3,15 +3,23 @@ package algo;
 import base.Bin;
 import base.BinFactory;
 import base.Context;
-
-import java.util.ArrayList;
-import java.util.List;
+import tree.AVLTree;
 
 public class BestFitStrategy implements BinPackingStrategy {
 
     @Override
-    public List<Bin> pack(Context context, BinFactory binFactory) {
-        return new ArrayList<>();
+    public void pack(Context context, BinFactory binFactory) {
+        AVLTree tree = new AVLTree();
+        for (int object : context.objects) {
+            Bin bin = tree.searchBestBin(object);
+            if (bin == null) {
+                bin = binFactory.createBin(context.binSize);
+            } else {
+                tree.delete(bin);
+            }
+            bin.add(object);
+            tree.insert(bin);
+        }
     }
 
     @Override

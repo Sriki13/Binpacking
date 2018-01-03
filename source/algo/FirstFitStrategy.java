@@ -5,8 +5,6 @@ import base.BinFactory;
 import base.Context;
 import tree.BinarySearchTree;
 
-import java.util.List;
-
 public class FirstFitStrategy implements BinPackingStrategy {
 
     /**
@@ -16,7 +14,7 @@ public class FirstFitStrategy implements BinPackingStrategy {
      * d'où la complexité de cet algorithme en n * log(n)
      */
     @Override
-    public List<Bin> pack(Context context, BinFactory binFactory) {
+    public void pack(Context context, BinFactory binFactory) {
         BinarySearchTree<Bin> bins = new BinarySearchTree<>();
         boolean inserted = true;
         bins.insert(binFactory.createBin(context.binSize));
@@ -37,7 +35,6 @@ public class FirstFitStrategy implements BinPackingStrategy {
             inserted = false;
         }
 
-        return bins.toSortedList();
     }
 
     @Override

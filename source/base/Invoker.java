@@ -53,8 +53,7 @@ public class Invoker {
         BinFactory binFactory;
         if (bench) {
             binFactory = new BenchableBinFactory();
-        }
-        else {
+        } else {
             binFactory = new ConcreteBinFactory();
         }
         for (Context context : contexts) {
@@ -62,8 +61,9 @@ public class Invoker {
             for (BinPackingStrategy strategy : strategies) {
                 output.println("\tApplication de la stratégie " + strategy.toString());
                 long start = System.nanoTime();
-                List<Bin> bins = strategy.pack(context, binFactory);
-                output.println("\tExécution en " + (System.nanoTime()  - start) + " nanosecondes");
+                strategy.pack(context, binFactory);
+                output.println("\tExécution en " + (System.nanoTime() - start) + " nanosecondes");
+                List<Bin> bins = binFactory.getCreatedBins();
                 output.println("\tBins remplies: " + bins.size());
                 if (bench) {
                     long read = bins.stream().mapToLong(bin -> ((BenchableBin) bin).getNbRead()).sum();
@@ -72,6 +72,7 @@ public class Invoker {
                     output.println("\t\t Nombres d'écritures " + write);
                 }
                 output.println();
+                binFactory.reset();
             }
             output.println("----------------------------------------------------------------------");
         }

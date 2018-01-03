@@ -11,7 +11,7 @@ public class ConcreteBin implements Bin {
     }
 
     public boolean fits(int object) {
-        return capacityLeft - object > 0;
+        return capacityLeft - object >= 0;
     }
 
     public void add(int object) {
@@ -28,9 +28,9 @@ public class ConcreteBin implements Bin {
 
     @Override
     public int compareTo(Bin o) {
-        int val = this.capacityLeft - ((ConcreteBin) o).capacityLeft;
+        int val = this.capacityLeft - o.getCapacityLeft();
         if (val == 0) {
-            return this.index - ((ConcreteBin) o).index;
+            return this.index - o.getIndex();
         }
         return val;
     }

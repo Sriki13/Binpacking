@@ -7,37 +7,60 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
+import static java.lang.Math.abs;
+
 public class AVLTree {
 
     private Node root;
 
-    public class Node {
-        private Node left, right;
-        private int height = 1;
-        private Bin value;
-
-        private Node (Bin val) {
-            this.value = val;
+    public static void main(String[] args) {
+        AVLTree rbst = new AVLTree();
+        rbst.insert(new ConcreteBin(10, 0));
+        rbst.insert(new ConcreteBin(9, 1));
+        rbst.insert(new ConcreteBin(8, 2));
+        rbst.insert(new ConcreteBin(7, 3));
+        rbst.insert(new ConcreteBin(6, 4));
+        rbst.insert(new ConcreteBin(5, 5));
+        rbst.insert(new ConcreteBin(4, 6));
+        rbst.insert(new ConcreteBin(2, 7));
+        rbst.insert(new ConcreteBin(11, 8));
+        rbst.insert(new ConcreteBin(12, 9));
+        rbst.insert(new ConcreteBin(12, 10));
+        rbst.insert(new ConcreteBin(12, 11));
+        rbst.insert(new ConcreteBin(12, 12));
+        rbst.insert(new ConcreteBin(12, 13));
+        rbst.insert(new ConcreteBin(12, 14));
+        rbst.display();
+//        rbst.delete(new ConcreteBin(2, 7));
+//        rbst.display();
+//        rbst.delete(new ConcreteBin(11, 8));
+//        rbst.delete(new ConcreteBin(8, 2));
+//        rbst.display();
+        //System.out.println(rbst.searchBestBin(3));
+        for (int i = 0; i <= 13; i++) {
+            System.out.println(i);
+            System.out.println(rbst.searchBestBin(i));
         }
     }
-    private int height (Node N) {
-        if (N == null)
+
+    private int height(Node node) {
+        if (node == null)
             return 0;
-        return N.height;
+        return node.height;
     }
 
-    public void insert( Bin value) {
-        root = insert(root,value);
+    public void insert(Bin value) {
+        root = insert(root, value);
     }
 
     private Node insert(Node node, Bin value) {
         /* 1.  Perform the normal BST rotation */
         if (node == null) {
-            return(new Node(value));
+            return (new Node(value));
         }
 
-        if (value .compareTo( node.value) < 0)
-            node.left  = insert(node.left, value);
+        if (value.compareTo(node.bin) < 0)
+            node.left = insert(node.left, value);
         else
             node.right = insert(node.right, value);
 
@@ -51,23 +74,21 @@ public class AVLTree {
         // If this node becomes unbalanced, then there are 4 cases
 
         // Left Left Case
-        if (balance > 1 && value .compareTo( node.left.value) < 0)
+        if (balance > 1 && value.compareTo(node.left.bin) < 0)
             return rightRotate(node);
 
         // Right Right Case
-        if (balance < -1 && value .compareTo( node.right.value) > 0)
+        if (balance < -1 && value.compareTo(node.right.bin) > 0)
             return leftRotate(node);
 
         // Left Right Case
-        if (balance > 1 && value .compareTo( node.left.value) > 0)
-        {
-            node.left =  leftRotate(node.left);
+        if (balance > 1 && value.compareTo(node.left.bin) > 0) {
+            node.left = leftRotate(node.left);
             return rightRotate(node);
         }
 
         // Right Left Case
-        if (balance < -1 && value .compareTo( node.right.value) < 0)
-        {
+        if (balance < -1 && value.compareTo(node.right.bin) < 0) {
             node.right = rightRotate(node.right);
             return leftRotate(node);
         }
@@ -85,8 +106,8 @@ public class AVLTree {
         y.left = T2;
 
         // Update heights
-        y.height = Math.max(height(y.left), height(y.right))+1;
-        x.height = Math.max(height(x.left), height(x.right))+1;
+        y.height = Math.max(height(y.left), height(y.right)) + 1;
+        x.height = Math.max(height(x.left), height(x.right)) + 1;
 
         // Return new root
         return x;
@@ -101,18 +122,11 @@ public class AVLTree {
         x.right = T2;
 
         //  Update heights
-        x.height = Math.max(height(x.left), height(x.right))+1;
-        y.height = Math.max(height(y.left), height(y.right))+1;
+        x.height = Math.max(height(x.left), height(x.right)) + 1;
+        y.height = Math.max(height(y.left), height(y.right)) + 1;
 
         // Return new root
         return y;
-    }
-
-    // Get Balance factor of node N
-    private int getBalance(Node N) {
-        if (N == null)
-            return 0;
-        return height(N.left) - height(N.right);
     }
 
     private Node minValueNode(Node node) {
@@ -123,8 +137,14 @@ public class AVLTree {
         return current;
     }
 
+    private int getBalance(Node node) {
+        if (node == null)
+            return 0;
+        return height(node.left) - height(node.right);
+    }
+
     public void delete(Bin value) {
-        root = deleteNode(root,value);
+        root = deleteNode(root, value);
     }
 
     private Node deleteNode(Node root, Bin value) {
@@ -133,21 +153,21 @@ public class AVLTree {
         if (root == null)
             return root;
 
-        // If the value to be deleted is smaller than the root's value,
+        // If the bin to be deleted is smaller than the root's bin,
         // then it lies in left subtree
-        if ( value .compareTo(root.value) < 0 )
+        if (value.compareTo(root.bin) < 0)
             root.left = deleteNode(root.left, value);
 
-            // If the value to be deleted is greater than the root's value,
+            // If the bin to be deleted is greater than the root's bin,
             // then it lies in right subtree
-        else if( value .compareTo( root.value) > 0 )
+        else if (value.compareTo(root.bin) > 0)
             root.right = deleteNode(root.right, value);
 
-            // if value is same as root's value, then This is the node
+            // if bin is same as root's bin, then This is the node
             // to be deleted
         else {
             // node with only one child or no child
-            if( (root.left == null) || (root.right == null) ) {
+            if ((root.left == null) || (root.right == null)) {
 
                 Node temp;
                 if (root.left != null)
@@ -156,25 +176,23 @@ public class AVLTree {
                     temp = root.right;
 
                 // No child case
-                if(temp == null) {
+                if (temp == null) {
                     temp = root;
                     root = null;
-                }
-                else // One child case
+                } else // One child case
                     root = temp; // Copy the contents of the non-empty child
 
                 temp = null;
-            }
-            else {
+            } else {
                 // node with two children: Get the inorder successor (smallest
                 // in the right subtree)
                 Node temp = minValueNode(root.right);
 
                 // Copy the inorder successor's data to this node
-                root.value = temp.value;
+                root.bin = temp.bin;
 
                 // Delete the inorder successor
-                root.right = deleteNode(root.right, temp.value);
+                root.right = deleteNode(root.right, temp.bin);
             }
         }
 
@@ -197,7 +215,7 @@ public class AVLTree {
 
         // Left Right Case
         if (balance > 1 && getBalance(root.left) < 0) {
-            root.left =  leftRotate(root.left);
+            root.left = leftRotate(root.left);
             return rightRotate(root);
         }
 
@@ -213,6 +231,11 @@ public class AVLTree {
 
         return root;
     }
+
+    public Bin searchBestBin(int size) {
+        return searchBestBin(size, root, null);
+    }
+
     ////////////////////////////////////////////////////
     // Convenience method to print a tree
     ////////////////////////////////////////////////////
@@ -221,20 +244,30 @@ public class AVLTree {
         display(root, "", "");
     }
 
-    private void display(Node t, String r, String p) {
-        if (t == null) {
-            System.out.println(r);
-        } else {
-            String rs = t.value.toString();
-            rs = "(" + t.height + ")" + rs;
-            System.out.println(r + rs);
-            if (t.left != null || t.right != null) {
-                String rr = p + '|' + makeString('_', rs.length()) + ' ';
-                display(t.right, rr, p + '|' + makeString(' ', rs.length() + 1));
-                System.out.println(p + '|');
-                display(t.left, rr, p + makeString(' ', rs.length() + 2));
+    private Bin searchBestBin(int size, Node node, Node closest) {
+        if (node == null) {
+            if (closest != null) {
+                return closest.bin;
+            } else
+                return null;
+        }
+        if (!node.bin.fits(size)) {
+            return searchBestBin(size, node.right, closest);
+        }
+        if (node.bin.getCapacityLeft() == size) {
+            if (node.left != null && node.left.bin.getCapacityLeft() == size) {
+                return searchBestBin(size, node.left, null);
+            } else {
+                return node.bin;
             }
         }
+        if (closest == null || abs(size - node.bin.getCapacityLeft()) < abs(size - closest.bin.getCapacityLeft())) {
+            closest = node;
+        }
+        if (node.left == null) {
+            return closest.bin;
+        }
+        return searchBestBin(size, node.left, closest);
     }
 
     private String makeString(char c, int k) {
@@ -258,29 +291,19 @@ public class AVLTree {
         return list;
     }
 
-    public static void main(String[] args) {
-        AVLTree rbst = new AVLTree();
-        rbst.insert(new ConcreteBin(10,0));
-        rbst.insert(new ConcreteBin(9, 1));
-        rbst.insert(new ConcreteBin(8, 2));
-        rbst.insert(new ConcreteBin(7, 3));
-        rbst.insert(new ConcreteBin(6, 4));
-        rbst.insert(new ConcreteBin(5, 5));
-        rbst.insert(new ConcreteBin(4, 6));
-        rbst.insert(new ConcreteBin(2, 7));
-        rbst.insert(new ConcreteBin(11, 8));
-        rbst.insert(new ConcreteBin(12,9));
-        rbst.insert(new ConcreteBin(12,10));
-        rbst.insert(new ConcreteBin(12,11));
-        rbst.insert(new ConcreteBin(12,12));
-        rbst.insert(new ConcreteBin(12,13));
-        rbst.insert(new ConcreteBin(12,14));
-        rbst.display();
-        rbst.delete(new ConcreteBin(2, 7));
-        rbst.display();
-        rbst.delete(new ConcreteBin(11, 8));
-        rbst.delete(new ConcreteBin(8, 2));
-        rbst.display();
-
+    private void display(Node t, String r, String p) {
+        if (t == null) {
+            System.out.println(r);
+        } else {
+            String rs = t.bin.toString();
+            rs = "(" + t.height + ")" + rs;
+            System.out.println(r + rs);
+            if (t.left != null || t.right != null) {
+                String rr = p + '|' + makeString('_', rs.length()) + ' ';
+                display(t.right, rr, p + '|' + makeString(' ', rs.length() + 1));
+                System.out.println(p + '|');
+                display(t.left, rr, p + makeString(' ', rs.length() + 2));
+            }
+        }
     }
 }

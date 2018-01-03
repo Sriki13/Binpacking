@@ -1,17 +1,13 @@
 package algo;
 
-import base.Bin;
 import base.BinFactory;
 import base.Context;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class WorstFitStrategy implements BinPackingStrategy {
 
     @Override
-    public List<Bin> pack(Context context, BinFactory binFactory) {
-        return new ArrayList<>();
+    public void pack(Context context, BinFactory binFactory) {
+
     }
 
     @Override
