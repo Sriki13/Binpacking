@@ -9,6 +9,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Classe gérant les arguments et le lancement du programme en général.
+ */
 public class Launcher {
 
     private final static String EXAMPLES_PATH = "exemples";
@@ -19,6 +22,12 @@ public class Launcher {
     private PrintStream out;
     private InputStream in;
 
+    /**
+     * Constructeur.
+     *
+     * @param out le stream de sortie des résultats
+     * @param in  le stream d'entrée de communication avec l'utilisateur
+     */
     public Launcher(PrintStream out, InputStream in) {
         this.out = out;
         this.in = in;
@@ -27,14 +36,21 @@ public class Launcher {
     }
 
 
+    /**
+     * Traite les arguments du programme.
+     *
+     * @param args les arguments utilisés
+     */
     public void manageArgs(String[] args) {
         for (String arg : args) {
             if (!arg.startsWith("-")) {
+                // Pas une option: chargement d'un contexte unique
                 path = arg;
             } else if (arg.equals("-random")) {
+                // Génération de contextes
                 randomFlag = true;
-            }
-            else if (arg.equals("-bench")) {
+            } else if (arg.equals("-bench")) {
+                // Montrer le nombre de lectures et d'écritures sur les bins
                 benchFlag = true;
             } else {
                 throw new RuntimeException("Argument invalide: " + arg);
@@ -42,6 +58,11 @@ public class Launcher {
         }
     }
 
+    /**
+     * Lance la lecture des contextes et l'exécution des startégies sur celles-ci.
+     *
+     * @throws FileNotFoundException si l'un des fichiers de contexte est introuvable
+     */
     public void launch() throws FileNotFoundException {
         Invoker invoker;
         if (path != null) {
@@ -51,7 +72,7 @@ public class Launcher {
             // Génération de contextes
             out.println("Entrez le nombre de contextes à créer");
             Scanner sc = new Scanner(in);
-            invoker = new Invoker(out, sc.nextInt());
+            invoker = new Invoker(out, System.in, sc.nextInt());
         } else {
             // Exécution sur tous les fichiers du dossier exemple
             File dir = new File(EXAMPLES_PATH);

@@ -8,8 +8,17 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Charge un contexte à partir d'un fichier.
+ */
 public class ContextParser extends ContextLoader {
 
+    /**
+     * Contructeur. Charge le contexte du fichier.
+     *
+     * @param input le fichier contenat le contexte
+     * @throws IOException si la lecture du fichier est impossible
+     */
     public ContextParser(File input) throws IOException {
         name = input.getName();
         binObjects = new ArrayList<>();

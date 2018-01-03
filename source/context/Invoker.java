@@ -3,19 +3,26 @@ package context;
 import algo.*;
 import bin.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Classe chargée d'invoquer les différents algorithmes sur l'ensemble des contextes.
+ */
 public class Invoker {
 
     private List<Context> contexts;
     private List<BinPackingStrategy> strategies;
     private PrintStream output;
 
+    /**
+     * Constructeur utilisé pour charger des contextes dans des fichiers.
+     *
+     * @param output   le stream d'output des résultats
+     * @param examples une liste des fichiers de contexte à charger
+     * @throws FileNotFoundException si l'un des fichiers est introuvable
+     */
     public Invoker(PrintStream output, List<File> examples) throws FileNotFoundException {
         this.output = output;
         loadDefaultStrategies();
@@ -30,17 +37,9 @@ public class Invoker {
         }
     }
 
-    public Invoker(PrintStream output, int amount) {
-        this.output = output;
-        loadDefaultStrategies();
-        contexts = new ArrayList<>();
-        ContextGenerator cg = new ContextGenerator();
-        contexts.add(new Context(cg));
-        for (int i = 1; i < amount; i++) {
-            contexts.add(new Context(cg.cloneMethod()));
-        }
-    }
-
+    /**
+     * Charge l'ensemble des stratégies disponibles.
+     */
     private void loadDefaultStrategies() {
         strategies = new ArrayList<>();
         strategies.add(new NextFitStrategy());
@@ -50,6 +49,29 @@ public class Invoker {
         strategies.add(new AlmostWorstFitStrategy());
     }
 
+    /**
+     * Constructeur utilisé lors de la génération aléatoire de contexte.
+     *
+     * @param output le stream d'output des résultats
+     * @param input  le stream d'input des données
+     * @param amount le nombre de contextes à générer
+     */
+    public Invoker(PrintStream output, InputStream input, int amount) {
+        this.output = output;
+        loadDefaultStrategies();
+        contexts = new ArrayList<>();
+        ContextGenerator cg = new ContextGenerator(output, input);
+        contexts.add(new Context(cg));
+        for (int i = 1; i < amount; i++) {
+            contexts.add(new Context(cg.cloneMethod()));
+        }
+    }
+
+    /**
+     * Applique l'ensemble des stratégies aux contextes disponibles.
+     *
+     * @param bench vrai pour montrer le nombre d'écriture/lecture des bench, faux sinon
+     */
     public void applyStrategies(boolean bench) {
         BinFactory binFactory;
         if (bench) {
