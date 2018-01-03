@@ -25,7 +25,7 @@ public class ContextGenerator extends ContextLoader {
             System.out.println("Nouveau contexte");
             System.out.println("Entrez la taille des bins");
             binSize = sc.nextInt();
-            System.out.println("Entrez le nombre de bins");
+            System.out.println("Entrez le nombre d'objets");
             size = sc.nextInt();
             System.out.println("Entrez la méthode de génération, 1 pour uniforme, 2 pour répartition normale");
             method = sc.nextInt();
@@ -77,7 +77,7 @@ public class ContextGenerator extends ContextLoader {
             if (binObjects.get(i) > binSize) {
                 binObjects.set(i, binSize);
             } else if (binObjects.get(i) < 1) {
-                binObjects.set(i, 0);
+                binObjects.set(i, 1);
             }
         }
     }

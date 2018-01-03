@@ -27,6 +27,11 @@ public class ConcreteBin implements Bin {
     }
 
     @Override
+    public boolean isFull() {
+        return capacityLeft == 0;
+    }
+
+    @Override
     public int compareTo(Bin o) {
         int val = this.capacityLeft - o.getCapacityLeft();
         if (val == 0) {

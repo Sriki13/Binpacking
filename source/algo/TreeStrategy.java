@@ -24,7 +24,9 @@ public abstract class TreeStrategy implements BinPackingStrategy {
                 tree.delete(bin);
             }
             bin.add(object);
-            tree.insert(bin);
+            if (!bin.isFull()) {
+                tree.insert(bin);
+            }
         }
     }
 

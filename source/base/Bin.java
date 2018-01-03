@@ -10,4 +10,6 @@ public interface Bin extends Comparable<Bin> {
 
     int getIndex();
 
+    boolean isFull();
+
 }

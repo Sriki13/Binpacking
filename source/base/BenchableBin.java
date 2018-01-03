@@ -32,6 +32,12 @@ public class BenchableBin implements Bin {
         return bin.getIndex();
     }
 
+    @Override
+    public boolean isFull() {
+        nbRead++;
+        return bin.isFull();
+    }
+
     public int getNbRead() {return nbRead;}
 
     public int getNbWrite() {return nbWrite;}
