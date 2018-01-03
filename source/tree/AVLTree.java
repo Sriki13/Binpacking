@@ -39,7 +39,7 @@ public class AVLTree {
         //System.out.println(rbst.searchBestBin(3));
         for (int i = 0; i <= 13; i++) {
             System.out.println(i);
-            System.out.println(rbst.searchBestBin(i));
+            System.out.println(rbst.searchWorstBin(i));
         }
     }
 
@@ -236,23 +236,19 @@ public class AVLTree {
         return searchBestBin(size, root, null);
     }
 
-    ////////////////////////////////////////////////////
-    // Convenience method to print a tree
-    ////////////////////////////////////////////////////
-
     public void display() {
         display(root, "", "");
     }
 
-    private Bin searchBestBin(int size, Node node, Node closest) {
+    private Bin searchBestBin(int size, Node node, Node best) {
         if (node == null) {
-            if (closest != null) {
-                return closest.bin;
+            if (best != null) {
+                return best.bin;
             } else
                 return null;
         }
         if (!node.bin.fits(size)) {
-            return searchBestBin(size, node.right, closest);
+            return searchBestBin(size, node.right, best);
         }
         if (node.bin.getCapacityLeft() == size) {
             if (node.left != null && node.left.bin.getCapacityLeft() == size) {
@@ -261,13 +257,25 @@ public class AVLTree {
                 return node.bin;
             }
         }
-        if (closest == null || abs(size - node.bin.getCapacityLeft()) < abs(size - closest.bin.getCapacityLeft())) {
-            closest = node;
+        if (best == null || abs(size - node.bin.getCapacityLeft()) < abs(size - best.bin.getCapacityLeft())) {
+            best = node;
         }
         if (node.left == null) {
-            return closest.bin;
+            return best.bin;
         }
-        return searchBestBin(size, node.left, closest);
+        return searchBestBin(size, node.left, best);
+    }
+
+    public Bin searchWorstBin(int size) { return searchWorstBin(size, root);}
+
+    private Bin searchWorstBin(int size, Node node) {
+        if (node == null) {
+            return null;
+        }
+        if (node.right == null && node.bin.fits(size)) {
+            return node.bin;
+        }
+        return searchWorstBin(size, node.right);
     }
 
     private String makeString(char c, int k) {

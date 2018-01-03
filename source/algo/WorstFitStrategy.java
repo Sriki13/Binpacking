@@ -1,13 +1,25 @@
 package algo;
 
+import base.Bin;
 import base.BinFactory;
 import base.Context;
+import tree.AVLTree;
 
 public class WorstFitStrategy implements BinPackingStrategy {
 
     @Override
     public void pack(Context context, BinFactory binFactory) {
-
+        AVLTree tree = new AVLTree();
+        for (int object : context.objects) {
+            Bin bin = tree.searchWorstBin(object);
+            if (bin == null) {
+                bin = binFactory.createBin(context.binSize);
+            } else {
+                tree.delete(bin);
+            }
+            bin.add(object);
+            tree.insert(bin);
+        }
     }
 
     @Override
