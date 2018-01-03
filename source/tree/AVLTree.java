@@ -3,6 +3,7 @@ package tree;
 import base.Bin;
 import base.ConcreteBin;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -12,9 +13,14 @@ import static java.lang.Math.abs;
 public class AVLTree {
 
     private Node root;
+    private Comparator<Bin> comparator;
+
+    public AVLTree(Comparator<Bin> comparator) {
+        this.comparator = comparator;
+    }
 
     public static void main(String[] args) {
-        AVLTree rbst = new AVLTree();
+        AVLTree rbst = new AVLTree(new ComparatorNotFirstFit());
         rbst.insert(new ConcreteBin(10, 0));
         rbst.insert(new ConcreteBin(9, 1));
         rbst.insert(new ConcreteBin(8, 2));
@@ -59,7 +65,7 @@ public class AVLTree {
             return (new Node(value));
         }
 
-        if (value.compareTo(node.bin) < 0)
+        if (this.comparator.compare(value, node.bin) < 0)
             node.left = insert(node.left, value);
         else
             node.right = insert(node.right, value);
@@ -74,21 +80,21 @@ public class AVLTree {
         // If this node becomes unbalanced, then there are 4 cases
 
         // Left Left Case
-        if (balance > 1 && value.compareTo(node.left.bin) < 0)
+        if (balance > 1 && this.comparator.compare(value, node.left.bin) < 0 )
             return rightRotate(node);
 
         // Right Right Case
-        if (balance < -1 && value.compareTo(node.right.bin) > 0)
+        if (balance < -1 && this.comparator.compare(value, node.right.bin) > 0)
             return leftRotate(node);
 
         // Left Right Case
-        if (balance > 1 && value.compareTo(node.left.bin) > 0) {
+        if (balance > 1 && this.comparator.compare(value, node.left.bin) > 0) {
             node.left = leftRotate(node.left);
             return rightRotate(node);
         }
 
         // Right Left Case
-        if (balance < -1 && value.compareTo(node.right.bin) < 0) {
+        if (balance < -1 && this.comparator.compare(value, node.right.bin) < 0) {
             node.right = rightRotate(node.right);
             return leftRotate(node);
         }
@@ -155,12 +161,12 @@ public class AVLTree {
 
         // If the bin to be deleted is smaller than the root's bin,
         // then it lies in left subtree
-        if (value.compareTo(root.bin) < 0)
+        if (this.comparator.compare(value, root.bin) < 0)
             root.left = deleteNode(root.left, value);
 
             // If the bin to be deleted is greater than the root's bin,
             // then it lies in right subtree
-        else if (value.compareTo(root.bin) > 0)
+        else if (this.comparator.compare(value, root.bin) > 0)
             root.right = deleteNode(root.right, value);
 
             // if bin is same as root's bin, then This is the node

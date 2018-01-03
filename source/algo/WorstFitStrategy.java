@@ -4,12 +4,13 @@ import base.Bin;
 import base.BinFactory;
 import base.Context;
 import tree.AVLTree;
+import tree.ComparatorNotFirstFit;
 
 public class WorstFitStrategy implements BinPackingStrategy {
 
     @Override
     public void pack(Context context, BinFactory binFactory) {
-        AVLTree tree = new AVLTree();
+        AVLTree tree = new AVLTree(new ComparatorNotFirstFit());
         for (int object : context.objects) {
             Bin bin = tree.searchWorstBin(object);
             if (bin == null) {
