@@ -39,7 +39,7 @@ public class AVLTree {
         //System.out.println(rbst.searchBestBin(3));
         for (int i = 0; i <= 13; i++) {
             System.out.println(i);
-            System.out.println(rbst.searchWorstBin(i));
+            System.out.println(rbst.searchAlmostWorstBin(i));
         }
     }
 
@@ -268,8 +268,8 @@ public class AVLTree {
         if (node == null) {
             if (best != null) {
                 return best.bin;
-            } else
-                return null;
+            }
+            return null;
         }
         if (!node.bin.fits(size)) {
             return searchBestBin(size, node.right, best);
@@ -300,6 +300,29 @@ public class AVLTree {
             return node.bin;
         }
         return searchWorstBin(size, node.right);
+    }
+
+    public Bin searchAlmostWorstBin(int size) {
+        return searchAlmostWorstBin(size, root, null);
+    }
+
+    private Bin searchAlmostWorstBin(int size, Node node, Node second) {
+        if (node == null) {
+            return null;
+        }
+        if (node.right == null) {
+            if (second != null) {
+                return second.bin;
+            }
+            if (node.bin.fits(size)) {
+                return node.bin;
+            }
+            return null;
+        }
+        if (node.bin.fits(size)) {
+            second = node;
+        }
+        return searchAlmostWorstBin(size, node.right, second);
     }
 
     private String makeString(char c, int k) {
