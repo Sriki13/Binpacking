@@ -57,7 +57,8 @@ public class Invoker {
             binFactory = new ConcreteBinFactory();
         }
         for (Context context : contexts) {
-            output.println("Chargement du contexte " + context.toString() + "\n");
+            output.println("Chargement du contexte " + context.name);
+            output.println("Contenu: " + context.toString() + "\n");
             for (BinPackingStrategy strategy : strategies) {
                 output.println("\tApplication de la stratégie " + strategy.toString());
                 long start = System.nanoTime();

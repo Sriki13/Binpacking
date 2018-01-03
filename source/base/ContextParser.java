@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 public class ContextParser extends ContextLoader {
 
     public ContextParser(File input) throws IOException {
+        name = input.getName();
         binObjects = new ArrayList<>();
         BufferedReader br = new BufferedReader(new FileReader(input));
 

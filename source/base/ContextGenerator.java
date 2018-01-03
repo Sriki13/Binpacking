@@ -19,6 +19,7 @@ public class ContextGenerator extends ContextLoader {
     private int deviation;
 
     public ContextGenerator() {
+        name = "Contexte généré par l'utilisateur";
         Scanner sc = new Scanner(System.in);
         try {
             System.out.println("Nouveau contexte");

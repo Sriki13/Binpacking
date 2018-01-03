@@ -7,10 +7,12 @@ public class Context {
 
     public int binSize;
     public List<Integer> objects;
+    public String name;
 
     public Context(ContextLoader creator) {
         binSize = creator.getBinSize();
         objects = creator.getObjects();
+        name = creator.getName();
     }
 
     @Override

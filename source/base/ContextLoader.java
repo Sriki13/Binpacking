@@ -6,6 +6,7 @@ public abstract class ContextLoader {
 
     protected int binSize;
     protected List<Integer> binObjects;
+    protected String name;
 
     public int getBinSize() {
         return binSize;
@@ -14,5 +15,7 @@ public abstract class ContextLoader {
     public List<Integer> getObjects() {
         return binObjects;
     }
+
+    public String getName() { return name;}
 
 }
