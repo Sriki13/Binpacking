@@ -4,6 +4,7 @@ import base.Bin;
 import base.BinFactory;
 import base.Context;
 import tree.AVLTree;
+import tree.ComparatorFirstFit;
 import tree.ComparatorNotFirstFit;
 
 public class FirstFitStrategy implements BinPackingStrategy {
@@ -16,8 +17,8 @@ public class FirstFitStrategy implements BinPackingStrategy {
      */
     @Override
     public void pack(Context context, BinFactory binFactory) {
-        // todo change the comparator to use ComparatorFirstFit<Bin>
-        AVLTree tree = new AVLTree(new ComparatorNotFirstFit());
+
+        AVLTree tree = new AVLTree(new ComparatorFirstFit());
         for (int object : context.objects) {
             Bin bin = tree.searchFirstBin(object);
             if (bin == null) {

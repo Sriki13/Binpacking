@@ -75,7 +75,15 @@ public class ConcreteBin implements Bin {
      */
     @Override
     public int compareToFirstFit(Bin b) {
-        return 0;
+        int rank = this.index - b.getIndex();
+        if (rank == 0) {
+            int val = this.capacityLeft - b.getCapacityLeft();
+            if (val == 0) {
+                return rank;
+            }
+            return val;
+        }
+        return rank;
     }
 
     @Override
