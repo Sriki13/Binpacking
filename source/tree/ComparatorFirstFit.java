@@ -48,6 +48,6 @@ public class ComparatorFirstFit implements Comparator<Bin> {
      */
     @Override
     public int compare(Bin o1, Bin o2) {
-        return 0;
+        return o1.compareToFirstFit(o2);
     }
 }
