@@ -70,7 +70,8 @@ public class Invoker {
     /**
      * Applique l'ensemble des stratégies aux contextes disponibles.
      *
-     * @param bench vrai pour montrer le nombre d'écriture/lecture des bench, faux sinon
+     * @param random vrai si génération de contexte, faux sinon
+     * @param bench  vrai pour montrer le nombre d'écriture/lecture des bench, faux sinon
      */
     public void applyStrategies(boolean bench, boolean random) {
         BinFactory binFactory;
@@ -90,7 +91,7 @@ public class Invoker {
             output.print('\n');
             for (Context context : contexts) {
                 ++i;
-                if ( i*100 / contexts.size() > 0) {
+                if (i * 100 / contexts.size() > 0) {
                     i = 0;
                     output.print('.');
                 }
