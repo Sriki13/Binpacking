@@ -4,197 +4,241 @@ import bin.Bin;
 
 import static java.lang.Math.abs;
 
+/**
+ * Un arbre AVL utilisé pour stocker les bins au cours des algorithmes.
+ * Adapté à partir de https://gist.github.com/nehaljwani/8243688
+ */
+@SuppressWarnings("SuspiciousNameCombination")
 public class AVLTree {
 
     private Node root;
 
+    // -----------------------------------------------------------------------------------------
+    //                                    INSERTION
+    // -----------------------------------------------------------------------------------------
+
+    /**
+     * Insère une bin dans l'arbre.
+     *
+     * @param value la bin à insérer
+     */
+    public void insert(Bin value) {
+        root = insert(root, value);
+    }
+
+    private Node insert(Node node, Bin value) {
+        // Insertion comme dans un BST standard
+        if (node == null) {
+            return (new Node(value));
+        }
+        if (value.compareTo(node.bin) < 0)
+            node.left = insert(node.left, value);
+        else
+            node.right = insert(node.right, value);
+
+        // Mise à jour de la hauteur de la node parent
+        node.height = Math.max(height(node.left), height(node.right)) + 1;
+
+        // Calcul du facteur d'équilibrage de la node pour savoir si il faut rééquilibrer
+        int balance = getBalance(node);
+
+        // 4 cas de déséquilibre
+        // Cas gauche gauche
+        if (balance > 1 && value.compareTo(node.left.bin) < 0)
+            return rightRotate(node);
+        // Cas droite droite
+        if (balance < -1 && value.compareTo(node.right.bin) > 0)
+            return leftRotate(node);
+        // Cas gauche droite
+        if (balance > 1 && value.compareTo(node.left.bin) > 0) {
+            node.left = leftRotate(node.left);
+            return rightRotate(node);
+        }
+        // Cas droite gauche
+        if (balance < -1 && value.compareTo(node.right.bin) < 0) {
+            node.right = rightRotate(node.right);
+            return leftRotate(node);
+        }
+
+        return node;
+    }
+
+    // -----------------------------------------------------------------------------------------
+    //                                    SUPPRESSION
+    // -----------------------------------------------------------------------------------------
+
+    /**
+     * Supprime une bin de l'abre.
+     *
+     * @param value la bin à supprimer
+     */
+    public void delete(Bin value) {
+        root = deleteNode(root, value);
+    }
+
+    private Node deleteNode(Node root, Bin value) {
+        // Supression comme dans un BST standard
+        if (root == null) {
+            return null;
+        }
+        if (value.compareTo(root.bin) < 0)
+            root.left = deleteNode(root.left, value);
+        else if (value.compareTo(root.bin) > 0)
+            root.right = deleteNode(root.right, value);
+        else {
+            if (root.left == null && root.right == null) {
+                // Pas d'enfants
+                root = null;
+            } else if (root.left == null || root.right == null) {
+                Node temp;
+                if (root.left != null)
+                    temp = root.left;
+                else
+                    temp = root.right;
+                root = temp; // Copie du contenu de l'enfant existant
+            } else {
+                // Node à 2 enfants: trouve le successeur suivant (plus petit à droite)
+                Node temp = minValueNode(root.right);
+                // Copie des données du successeur dans la node courante
+                root.bin = temp.bin;
+                // Suppression du successeur
+                root.right = deleteNode(root.right, temp.bin);
+            }
+        }
+
+        // Retour si l'arbre n'avait qu'une seule node
+        if (root == null)
+            return null;
+
+        // Mise à jour de la hauteur de la node courante
+        root.height = Math.max(height(root.left), height(root.right)) + 1;
+        // Calcul du facteur d'équilibrage de la node pour savoir si il faut rééquilibrer
+        int balance = getBalance(root);
+        // 4 cas de déséquilibre
+        // Cas gauche gauche
+        if (balance > 1 && getBalance(root.left) >= 0)
+            return rightRotate(root);
+        // Cas gauche droite
+        if (balance > 1 && getBalance(root.left) < 0) {
+            root.left = leftRotate(root.left);
+            return rightRotate(root);
+        }
+        // Cas droite droite
+        if (balance < -1 && getBalance(root.right) <= 0)
+            return leftRotate(root);
+        // Cas droite gauche
+        if (balance < -1 && getBalance(root.right) > 0) {
+            root.right = rightRotate(root.right);
+            return leftRotate(root);
+        }
+        return root;
+    }
+
+    // -----------------------------------------------------------------------------------------
+    //                                    UTILITAIRES
+    // -----------------------------------------------------------------------------------------
+
+    /**
+     * Détermine la hauteur d'une node de l'arbre.
+     *
+     * @param node la node à analyser
+     * @return sa hauteur
+     */
     private int height(Node node) {
         if (node == null)
             return 0;
         return node.height;
     }
 
-    public void insert(Bin value) {
-        root = insert(root, value);
-    }
+    // Rotation droite :
+    //            y                            x
+    //           / \          ----->         /   \
+    //         x    y.right            x.left     y
+    //        / \                                / \
+    //  x.left   t                              t   y.right
 
-    private Node insert(Node node, Bin value) {
-        /* 1.  Perform the normal BST rotation */
-        if (node == null) {
-            return (new Node(value));
-        }
-
-        if (value.compareTo(node.bin) < 0)
-            node.left = insert(node.left, value);
-        else
-            node.right = insert(node.right, value);
-
-        /* 2. Update height of this ancestor node */
-        node.height = Math.max(height(node.left), height(node.right)) + 1;
-
-        /* 3. Get the balance factor of this ancestor node to check whether
-           this node became unbalanced */
-        int balance = getBalance(node);
-
-        // If this node becomes unbalanced, then there are 4 cases
-
-        // Left Left Case
-        if (balance > 1 && value.compareTo(node.left.bin) < 0)
-            return rightRotate(node);
-
-        // Right Right Case
-        if (balance < -1 && value.compareTo(node.right.bin) > 0)
-            return leftRotate(node);
-
-        // Left Right Case
-        if (balance > 1 && value.compareTo(node.left.bin) > 0) {
-            node.left = leftRotate(node.left);
-            return rightRotate(node);
-        }
-
-        // Right Left Case
-        if (balance < -1 && value.compareTo(node.right.bin) < 0) {
-            node.right = rightRotate(node.right);
-            return leftRotate(node);
-        }
-
-        /* return the (unchanged) node pointer */
-        return node;
-    }
-
+    /**
+     * Effectue une rotation droite avec pour racine la node donnée.
+     *
+     * @param y la node racine orginale
+     * @return la racine après rotation
+     */
     private Node rightRotate(Node y) {
         Node x = y.left;
-        Node T2 = x.right;
-
-        // Perform rotation
+        Node t = x.right;
+        // Rotation droite
         x.right = y;
-        y.left = T2;
-
-        // Update heights
+        y.left = t;
+        // Mise à jour des hauteurs
         y.height = Math.max(height(y.left), height(y.right)) + 1;
         x.height = Math.max(height(x.left), height(x.right)) + 1;
-
-        // Return new root
+        // Nouvelle racine
         return x;
     }
 
+    // Rotation gauche :
+    //         x                                y
+    //        / \           ----->            /   \
+    //  x.left   y                          x    y.right
+    //          / \                        / \
+    //         t   y.right           x.left   t
+
+    /**
+     * Effectue une rotation gauche avec pour racine la node donnée.
+     *
+     * @param x la node racine orginale
+     * @return la racine après rotation
+     */
     private Node leftRotate(Node x) {
         Node y = x.right;
-        Node T2 = y.left;
-
-        // Perform rotation
+        Node t = y.left;
+        // Rotation gauche
         y.left = x;
-        x.right = T2;
-
-        //  Update heights
+        x.right = t;
+        // Mise à jour des hauteurs
         x.height = Math.max(height(x.left), height(x.right)) + 1;
         y.height = Math.max(height(y.left), height(y.right)) + 1;
-
-        // Return new root
+        // Nouvelle racine
         return y;
     }
 
+    /**
+     * Trouve la node de valeur minimale du sous arbre partant de la node donnée.
+     *
+     * @param node la node racine à partir de laquelle chercher
+     * @return la node minimale du sous-arbre partant de la node donnée
+     */
     private Node minValueNode(Node node) {
         Node current = node;
-        /* loop down to find the leftmost leaf */
+        // Parcours pour trouver la feuille la plus à gauche
         while (current.left != null)
             current = current.left;
         return current;
     }
 
+    /**
+     * Donne le facteur d'équilibrage d'une node, correspondant à la différence
+     * de hauteur entre le sous arbre gauche et le droit.
+     *
+     * @param node la node au facteur à déterminer
+     * @return le facteur d'équilibrage de cette node
+     */
     private int getBalance(Node node) {
         if (node == null)
             return 0;
         return height(node.left) - height(node.right);
     }
 
-    public void delete(Bin value) {
-        root = deleteNode(root, value);
-    }
+    // -----------------------------------------------------------------------------------------
+    //                                    FIRST BIN
+    // -----------------------------------------------------------------------------------------
 
-    private Node deleteNode(Node root, Bin value) {
-        // STEP 1: PERFORM STANDARD BST DELETE
-
-        if (root == null)
-            return root;
-
-        // If the bin to be deleted is smaller than the root's bin,
-        // then it lies in left subtree
-        if (value.compareTo(root.bin) < 0)
-            root.left = deleteNode(root.left, value);
-
-            // If the bin to be deleted is greater than the root's bin,
-            // then it lies in right subtree
-        else if (value.compareTo(root.bin) > 0)
-            root.right = deleteNode(root.right, value);
-
-            // if bin is same as root's bin, then This is the node
-            // to be deleted
-        else {
-            // node with only one child or no child
-            if ((root.left == null) || (root.right == null)) {
-
-                Node temp;
-                if (root.left != null)
-                    temp = root.left;
-                else
-                    temp = root.right;
-
-                // No child case
-                if (temp == null) {
-                    root = null;
-                } else // One child case
-                    root = temp; // Copy the contents of the non-empty child
-
-            } else {
-                // node with two children: Get the inorder successor (smallest
-                // in the right subtree)
-                Node temp = minValueNode(root.right);
-
-                // Copy the inorder successor's data to this node
-                root.bin = temp.bin;
-
-                // Delete the inorder successor
-                root.right = deleteNode(root.right, temp.bin);
-            }
-        }
-
-        // If the tree had only one node then return
-        if (root == null)
-            return root;
-
-        // STEP 2: UPDATE HEIGHT OF THE CURRENT NODE
-        root.height = Math.max(height(root.left), height(root.right)) + 1;
-
-        // STEP 3: GET THE BALANCE FACTOR OF THIS NODE (to check whether
-        //  this node became unbalanced)
-        int balance = getBalance(root);
-
-        // If this node becomes unbalanced, then there are 4 cases
-
-        // Left Left Case
-        if (balance > 1 && getBalance(root.left) >= 0)
-            return rightRotate(root);
-
-        // Left Right Case
-        if (balance > 1 && getBalance(root.left) < 0) {
-            root.left = leftRotate(root.left);
-            return rightRotate(root);
-        }
-
-        // Right Right Case
-        if (balance < -1 && getBalance(root.right) <= 0)
-            return leftRotate(root);
-
-        // Right Left Case
-        if (balance < -1 && getBalance(root.right) > 0) {
-            root.right = rightRotate(root.right);
-            return leftRotate(root);
-        }
-
-        return root;
-    }
-
+    /**
+     * Recherche la bin d'indice le plus bas pouvant accepter l'objet demandé.
+     * Renvoie null si aucune ne convient.
+     *
+     * @param size la taille de l'objet à insérer
+     */
     public Bin searchFirstBin(int size) {
         return searchFirstBin(size, root, null);
     }
@@ -225,6 +269,16 @@ public class AVLTree {
         return searchFirstBin(size, node.left, min);
     }
 
+    // -----------------------------------------------------------------------------------------
+    //                                    BEST BIN
+    // -----------------------------------------------------------------------------------------
+
+    /**
+     * Recherche la bin la plus remplie pouvant accepter l'objet demandé.
+     * Renvoie null si aucune ne convient.
+     *
+     * @param size la taille de l'objet à insérer
+     */
     public Bin searchBestBin(int size) {
         return searchBestBin(size, root, null);
     }
@@ -255,6 +309,16 @@ public class AVLTree {
         return searchBestBin(size, node.left, best);
     }
 
+    // -----------------------------------------------------------------------------------------
+    //                                    WORST BIN
+    // -----------------------------------------------------------------------------------------
+
+    /**
+     * Recherche la bin la moins remplie pouvant accepter l'objet demandé.
+     * Renvoie null si aucune ne convient.
+     *
+     * @param size la taille de l'objet à insérer
+     */
     public Bin searchWorstBin(int size) {
         return searchWorstBin(size, root);
     }
@@ -269,6 +333,17 @@ public class AVLTree {
         return searchWorstBin(size, node.right);
     }
 
+    // -----------------------------------------------------------------------------------------
+    //                                    ALMOST WORST BIN
+    // -----------------------------------------------------------------------------------------
+
+    /**
+     * Recherche la deuxième bin la moins remplie pouvant accepter l'objet demandé.
+     * Si une seule bin convient, elle est renvoyée à la place.
+     * Renvoie null si aucune ne convient.
+     *
+     * @param size la taille de l'objet à insérer
+     */
     public Bin searchAlmostWorstBin(int size) {
         return searchAlmostWorstBin(size, root, null);
     }
@@ -291,4 +366,5 @@ public class AVLTree {
         }
         return searchAlmostWorstBin(size, node.right, second);
     }
+
 }
