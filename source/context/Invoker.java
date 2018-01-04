@@ -72,33 +72,66 @@ public class Invoker {
      *
      * @param bench vrai pour montrer le nombre d'écriture/lecture des bench, faux sinon
      */
-    public void applyStrategies(boolean bench) {
+    public void applyStrategies(boolean bench, boolean random) {
         BinFactory binFactory;
         if (bench) {
             binFactory = new BenchableBinFactory();
         } else {
             binFactory = new ConcreteBinFactory();
         }
-        for (Context context : contexts) {
-            output.println("Chargement du contexte " + context.name);
-            output.println("Contenu: " + context.toString() + "\n");
-            for (BinPackingStrategy strategy : strategies) {
-                output.println("\tApplication de la stratégie " + strategy.toString());
-                long start = System.nanoTime();
-                strategy.pack(context, binFactory);
-                output.println("\tExécution en " + (System.nanoTime() - start) + " nanosecondes");
-                List<Bin> bins = binFactory.getCreatedBins();
-                output.println("\tBins remplies: " + bins.size());
-                if (bench) {
-                    long read = bins.stream().mapToLong(bin -> ((BenchableBin) bin).getNbRead()).sum();
-                    long write = bins.stream().mapToLong(bin -> ((BenchableBin) bin).getNbWrite()).sum();
-                    output.println("\t\t Nombres de lectures " + read);
-                    output.println("\t\t Nombres d'écritures " + write);
-                }
-                output.println();
-                binFactory.reset();
+        if (random && contexts.size() > 1) {
+            output.println("Chargement du contexte " + contexts.get(0).name);
+            output.println("Contenu: " + contexts.get(0).toString() + "\n");
+            int i = 0;
+            output.println("Chargement...");
+            for (int j = 0; j < 100; j++) {
+                output.print('.');
             }
-            output.println("----------------------------------------------------------------------");
+            output.print('\n');
+            for (Context context : contexts) {
+                ++i;
+                if ( i*100 / contexts.size() > 0) {
+                    i = 0;
+                    output.print('.');
+                }
+                for (BinPackingStrategy strategy : strategies) {
+                    strategy.apply(context, binFactory, bench);
+                    binFactory.reset();
+                    strategy.reset();
+                }
+            }
+            output.println();
+            output.println();
+            for (BinPackingStrategy strategy : strategies) {
+                output.println("\tRésultats de la stratégie " + strategy.toString());
+                output.println(strategy.getData());
+                output.println("----------------------------------------------------------------------");
+                output.println();
+            }
+        } else {
+            for (Context context : contexts) {
+                output.println("Chargement du contexte " + context.name);
+                output.println("Contenu: " + context.toString() + "\n");
+                for (BinPackingStrategy strategy : strategies) {
+                    output.println("\tApplication de la stratégie " + strategy.toString());
+                    long start = System.nanoTime();
+                    strategy.pack(context, binFactory);
+                    output.println("\tExécution en " + (System.nanoTime() - start) + " nanosecondes");
+                    List<Bin> bins = binFactory.getCreatedBins();
+                    output.println("\tBins remplies: " + bins.size());
+                    if (bench) {
+                        long read = bins.stream().mapToLong(bin -> ((BenchableBin) bin).getNbRead()).sum();
+                        long write = bins.stream().mapToLong(bin -> ((BenchableBin) bin).getNbWrite()).sum();
+                        output.println("\t\t Nombres de lectures " + read);
+                        output.println("\t\t Nombres d'écritures " + write);
+                    }
+                    output.println();
+                    binFactory.reset();
+                    strategy.reset();
+                }
+                output.println("----------------------------------------------------------------------");
+            }
+
         }
     }
 

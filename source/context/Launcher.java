@@ -87,7 +87,7 @@ public class Launcher {
             List<File> examples = Arrays.asList(dir.listFiles());
             invoker = new Invoker(out, examples);
         }
-        invoker.applyStrategies(benchFlag);
+        invoker.applyStrategies(benchFlag,randomFlag);
     }
 
 }

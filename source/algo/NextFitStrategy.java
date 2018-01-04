@@ -9,7 +9,7 @@ import context.Context;
  * Si celle ci ne peut pas accueillir d'objets, une nouvelle bin est crée
  * et l'ancienne bin ne sera pas considérée pour les objets suivants.
  */
-public class NextFitStrategy implements BinPackingStrategy {
+public class NextFitStrategy extends BinPackingStrategy {
 
     /**
      * Crée et remplit les bins d'objets.
@@ -28,6 +28,11 @@ public class NextFitStrategy implements BinPackingStrategy {
                 current.add(object);
             }
         }
+    }
+
+    @Override
+    public void reset() {
+        //Ne fait rien
     }
 
     @Override

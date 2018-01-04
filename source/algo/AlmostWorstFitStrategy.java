@@ -25,5 +25,4 @@ public class AlmostWorstFitStrategy extends TreeStrategy {
     public String toString() {
         return "Almost worst fit";
     }
-
 }

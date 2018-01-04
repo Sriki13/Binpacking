@@ -6,7 +6,7 @@ import bin.BinFactory;
 import context.Context;
 import tree.AVLTree;
 
-public abstract class TreeStrategy implements BinPackingStrategy {
+public abstract class TreeStrategy extends BinPackingStrategy {
 
     protected AVLTree tree;
 
@@ -28,6 +28,11 @@ public abstract class TreeStrategy implements BinPackingStrategy {
                 tree.insert(bin);
             }
         }
+    }
+
+    @Override
+    public void reset() {
+        tree = new AVLTree();
     }
 
     /**
