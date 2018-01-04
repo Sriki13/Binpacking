@@ -3,6 +3,10 @@ package bin;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Une trace d'exécution d'un algorithme sur plusieurs simulations.
+ */
+@SuppressWarnings("ConstantConditions")
 public class ExecutionData {
 
     private List<Long> filledBins;
@@ -21,13 +25,13 @@ public class ExecutionData {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("\t\tNombre de simulations : ").append(filledBins.size()).append('\n');
-        createResult(sb,"de bins utilisés",filledBins);
-        createResult(sb,"du temps d'éxécution",execTime);
-        if(!nbRead.isEmpty()) {
-            createResult(sb,"du nombre de lectures",nbRead);
+        createResult(sb, "de bins utilisés", filledBins);
+        createResult(sb, "du temps d'éxécution en nanosecondes", execTime);
+        if (!nbRead.isEmpty()) {
+            createResult(sb, "du nombre de lectures", nbRead);
         }
-        if(!nbWrite.isEmpty()) {
-            createResult(sb,"du nombre d'écritures",nbWrite);
+        if (!nbWrite.isEmpty()) {
+            createResult(sb, "du nombre d'écritures", nbWrite);
         }
         return sb.toString();
     }
@@ -35,7 +39,7 @@ public class ExecutionData {
     private void createResult(StringBuilder sb, String type, List<Long> data) {
         sb.append("\t\tMoyenne ").append(type).append(" : ");
         sb.append(Math.round(data.stream().mapToDouble(value -> value).average().getAsDouble())).append('\n');
-        sb.append("\t\tMinmum ").append(type).append(" : ");
+        sb.append("\t\tMinimum ").append(type).append(" : ");
         sb.append(data.stream().min(Long::compareTo).get()).append('\n');
         sb.append("\t\tMaximum ").append(type).append(" : ");
         sb.append(data.stream().max(Long::compareTo).get()).append('\n');
@@ -57,4 +61,5 @@ public class ExecutionData {
     public void addnbRead(Long nbRead) {
         this.nbRead.add(nbRead);
     }
+
 }

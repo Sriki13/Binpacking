@@ -23,9 +23,16 @@ public abstract class BinPackingStrategy {
      */
     public abstract void pack(Context context, BinFactory binFactory);
 
-    public void apply (Context context, BinFactory binFactory, boolean bench) {
+    /**
+     * Applique la stratégie à un contexte donné.
+     *
+     * @param context    le contexte de la simulation
+     * @param binFactory la factory créant les bins
+     * @param bench      vrai pour mesurer les lectures/écritures, faux sinon
+     */
+    public void apply(Context context, BinFactory binFactory, boolean bench) {
         long start = System.nanoTime();
-        pack(context,binFactory);
+        pack(context, binFactory);
         data.addExecTime(System.nanoTime() - start);
         List<Bin> bins = binFactory.getCreatedBins();
         if (bench) {
@@ -34,9 +41,9 @@ public abstract class BinPackingStrategy {
         }
         data.addFilledBins(bins.size());
     }
+
     /**
      * Remet à zéro la stratégie.
-     *
      */
     public abstract void reset();
 

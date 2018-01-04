@@ -14,6 +14,12 @@ public abstract class TreeStrategy extends BinPackingStrategy {
         tree = new AVLTree();
     }
 
+    /**
+     * Crée et remplit les bins d'objets.
+     *
+     * @param context    le contexte détaillant les bins et objets disponibles
+     * @param binFactory la factory utilisée pour créer les bins
+     */
     @Override
     public void pack(Context context, BinFactory binFactory) {
         for (int object : context.objects) {
@@ -30,6 +36,9 @@ public abstract class TreeStrategy extends BinPackingStrategy {
         }
     }
 
+    /**
+     * Remet à zéro la stratégie.
+     */
     @Override
     public void reset() {
         tree = new AVLTree();
