@@ -2,14 +2,17 @@ package tree;
 
 import bin.Bin;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 /**
  * Un arbre AVL utilisé pour stocker les bins au cours des algorithmes.
  * Adapté à partir de https://gist.github.com/nehaljwani/8243688
  */
 @SuppressWarnings("SuspiciousNameCombination")
-public class AVLTree {
+public class AVLTreeFirstFit {
 
-    private Node root;
+    protected NodeFirstFit root;
 
     // -----------------------------------------------------------------------------------------
     //                                    INSERTION
@@ -24,10 +27,10 @@ public class AVLTree {
         root = insert(root, value);
     }
 
-    private Node insert(Node node, Bin value) {
+    protected NodeFirstFit insert(NodeFirstFit node, Bin value) {
         // Insertion comme dans un BST standard
         if (node == null) {
-            return (new Node(value));
+            return (new NodeFirstFit(value));
         }
         if (value.compareTo(node.bin) < 0)
             node.left = insert(node.left, value);
@@ -36,6 +39,8 @@ public class AVLTree {
 
         // Mise à jour de la hauteur de la node parent
         node.height = Math.max(height(node.left), height(node.right)) + 1;
+        // Mise à jour de l'indice min du parent
+        node.minIndex = Collections.min(Arrays.asList(minIndex(node.left), minIndex(node.right), node.minIndex));
 
         // Calcul du facteur d'équilibrage de la node pour savoir si il faut rééquilibrer
         int balance = getBalance(node);
@@ -74,7 +79,7 @@ public class AVLTree {
         root = deleteNode(root, value);
     }
 
-    private Node deleteNode(Node root, Bin value) {
+    protected NodeFirstFit deleteNode(NodeFirstFit root, Bin value) {
         // Supression comme dans un BST standard
         if (root == null) {
             return null;
@@ -88,7 +93,7 @@ public class AVLTree {
                 // Pas d'enfants
                 root = null;
             } else if (root.left == null || root.right == null) {
-                Node temp;
+                NodeFirstFit temp;
                 if (root.left != null)
                     temp = root.left;
                 else
@@ -96,7 +101,7 @@ public class AVLTree {
                 root = temp; // Copie du contenu de l'enfant existant
             } else {
                 // Node à 2 enfants: trouve le successeur suivant (plus petit à droite)
-                Node temp = minValueNode(root.right);
+                NodeFirstFit temp = minValueNode(root.right);
                 // Copie des données du successeur dans la node courante
                 root.bin = temp.bin;
                 // Suppression du successeur
@@ -110,6 +115,8 @@ public class AVLTree {
 
         // Mise à jour de la hauteur de la node courante
         root.height = Math.max(height(root.left), height(root.right)) + 1;
+        // Mise à jour de l'indice min du parent
+        root.minIndex = Collections.min(Arrays.asList(minIndex(root.left), minIndex(root.right), root.minIndex));
         // Calcul du facteur d'équilibrage de la node pour savoir si il faut rééquilibrer
         int balance = getBalance(root);
         // 4 cas de déséquilibre
@@ -142,7 +149,7 @@ public class AVLTree {
      * @param node la node à analyser
      * @return sa hauteur
      */
-    private int height(Node node) {
+    protected int height(NodeFirstFit node) {
         if (node == null)
             return 0;
         return node.height;
@@ -161,15 +168,18 @@ public class AVLTree {
      * @param y la node racine orginale
      * @return la racine après rotation
      */
-    private Node rightRotate(Node y) {
-        Node x = y.left;
-        Node t = x.right;
+    protected NodeFirstFit rightRotate(NodeFirstFit y) {
+        NodeFirstFit x = y.left;
+        NodeFirstFit t = x.right;
         // Rotation droite
         x.right = y;
         y.left = t;
         // Mise à jour des hauteurs
         y.height = Math.max(height(y.left), height(y.right)) + 1;
         x.height = Math.max(height(x.left), height(x.right)) + 1;
+        // Mise à jour des indices mins
+        y.minIndex = Collections.min(Arrays.asList(minIndex(y.left), minIndex(y.right), y.minIndex));
+        x.minIndex = Collections.min(Arrays.asList(minIndex(x.left), minIndex(x.right), x.minIndex));
         // Nouvelle racine
         return x;
     }
@@ -187,15 +197,18 @@ public class AVLTree {
      * @param x la node racine orginale
      * @return la racine après rotation
      */
-    private Node leftRotate(Node x) {
-        Node y = x.right;
-        Node t = y.left;
+    protected NodeFirstFit leftRotate(NodeFirstFit x) {
+        NodeFirstFit y = x.right;
+        NodeFirstFit t = y.left;
         // Rotation gauche
         y.left = x;
         x.right = t;
         // Mise à jour des hauteurs
         x.height = Math.max(height(x.left), height(x.right)) + 1;
         y.height = Math.max(height(y.left), height(y.right)) + 1;
+        // Mise à jour des indices mins
+        y.minIndex = Collections.min(Arrays.asList(minIndex(y.left), minIndex(y.right), y.minIndex));
+        x.minIndex = Collections.min(Arrays.asList(minIndex(x.left), minIndex(x.right), x.minIndex));
         // Nouvelle racine
         return y;
     }
@@ -206,8 +219,8 @@ public class AVLTree {
      * @param node la node racine à partir de laquelle chercher
      * @return la node minimale du sous-arbre partant de la node donnée
      */
-    private Node minValueNode(Node node) {
-        Node current = node;
+    protected NodeFirstFit minValueNode(NodeFirstFit node) {
+        NodeFirstFit current = node;
         // Parcours pour trouver la feuille la plus à gauche
         while (current.left != null)
             current = current.left;
@@ -221,97 +234,56 @@ public class AVLTree {
      * @param node la node au facteur à déterminer
      * @return le facteur d'équilibrage de cette node
      */
-    private int getBalance(Node node) {
+    protected int getBalance(NodeFirstFit node) {
         if (node == null)
             return 0;
         return height(node.left) - height(node.right);
     }
 
+    /**
+     * Donne l'indice minimum des bins de l'arbre partant de la node donnée.
+     *
+     * @param node la node à analyser
+     * @return l'indice minimum de bins dans l'arbre de la node, ou Integer.MAX_VALUE si
+     * la node est null
+     */
+    private int minIndex(NodeFirstFit node) {
+        if (node == null) {
+            return Integer.MAX_VALUE;
+        } else return node.minIndex;
+    }
+
     // -----------------------------------------------------------------------------------------
-    //                                    BEST BIN
+    //                                    FIRST BIN
     // -----------------------------------------------------------------------------------------
 
     /**
-     * Recherche la bin la plus remplie pouvant accepter l'objet demandé.
+     * Recherche la bin d'indice le plus bas pouvant accepter l'objet demandé.
      * Renvoie null si aucune ne convient.
      *
      * @param size la taille de l'objet à insérer
      */
-    public Bin searchBestBin(int size) {
-        return searchBestBin(size, root);
+    public Bin searchFirstBin(int size) {
+        return searchFirstBin(size, root);
     }
 
-    private Bin searchBestBin(int size, Node node) {
+    private Bin searchFirstBin(int size, NodeFirstFit node) {
         if (node == null) {
             return null;
         }
         if (!node.bin.fits(size)) {
-            return searchBestBin(size, node.right);
+            return searchFirstBin(size, node.right);
         }
-        Bin down = searchBestBin(size, node.left);
-        if (down == null) {
-            return node.bin;
-        } else {
-            return down;
+        if (minIndex(node.right) < node.minIndex) {
+            return searchFirstBin(size, node.right);
         }
-    }
-
-    // -----------------------------------------------------------------------------------------
-    //                                    WORST BIN
-    // -----------------------------------------------------------------------------------------
-
-    /**
-     * Recherche la bin la moins remplie pouvant accepter l'objet demandé.
-     * Renvoie null si aucune ne convient.
-     *
-     * @param size la taille de l'objet à insérer
-     */
-    public Bin searchWorstBin(int size) {
-        return searchWorstBin(size, root);
-    }
-
-    private Bin searchWorstBin(int size, Node node) {
-        if (node == null) {
-            return null;
-        }
-        if (node.right == null && node.bin.fits(size)) {
-            return node.bin;
-        }
-        return searchWorstBin(size, node.right);
-    }
-
-    // -----------------------------------------------------------------------------------------
-    //                                    ALMOST WORST BIN
-    // -----------------------------------------------------------------------------------------
-
-    /**
-     * Recherche la deuxième bin la moins remplie pouvant accepter l'objet demandé.
-     * Si une seule bin convient, elle est renvoyée à la place.
-     * Renvoie null si aucune ne convient.
-     *
-     * @param size la taille de l'objet à insérer
-     */
-    public Bin searchAlmostWorstBin(int size) {
-        return searchAlmostWorstBin(size, root, null);
-    }
-
-    private Bin searchAlmostWorstBin(int size, Node node, Node second) {
-        if (node == null) {
-            return null;
-        }
-        if (node.right == null) {
-            if (second != null) {
-                return second.bin;
+        if (minIndex(node.left) < node.minIndex) {
+            Bin down = searchFirstBin(size, node.left);
+            if (down != null) {
+                return down;
             }
-            if (node.bin.fits(size)) {
-                return node.bin;
-            }
-            return null;
         }
-        if (node.bin.fits(size)) {
-            second = node;
-        }
-        return searchAlmostWorstBin(size, node.right, second);
+        return node.bin;
     }
 
 }
