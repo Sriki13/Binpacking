@@ -302,11 +302,8 @@ public class AVLTree {
         Bin down = searchBestBin(size, node.left);
         if (down == null) {
             return node.bin;
-        }
-        if (size - down.getCapacityLeft() < size - node.bin.getCapacityLeft()) {
-            return down;
         } else {
-            return node.bin;
+            return down;
         }
     }
 
