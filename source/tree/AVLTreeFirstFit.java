@@ -274,12 +274,12 @@ public class AVLTreeFirstFit {
         if (!node.bin.fits(size)) {
             return searchFirstBin(size, node.right);
         }
-        if (minIndex(node.right) < node.minIndex) {
+        if (minIndex(node.right) <= node.minIndex) {
             return searchFirstBin(size, node.right);
         }
-        if (minIndex(node.left) < node.minIndex) {
+        if (minIndex(node.left) <= node.minIndex) {
             Bin down = searchFirstBin(size, node.left);
-            if (down != null && down.getIndex() < node.minIndex) {
+            if (down != null) {
                 return down;
             }
         }
