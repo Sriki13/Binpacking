@@ -279,7 +279,7 @@ public class AVLTreeFirstFit {
         }
         if (minIndex(node.left) < node.minIndex) {
             Bin down = searchFirstBin(size, node.left);
-            if (down != null) {
+            if (down != null && down.getIndex() < node.minIndex) {
                 return down;
             }
         }
