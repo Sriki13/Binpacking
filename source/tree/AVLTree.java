@@ -251,13 +251,6 @@ public class AVLTree {
         if (!node.bin.fits(size)) {
             return searchFirstBin(size, node.right);
         }
-        if (node.bin.getCapacityLeft() == size) {
-            if (node.left != null && node.left.bin.getCapacityLeft() == size) {
-                return searchFirstBin(size, node.left);
-            } else {
-                return node.bin;
-            }
-        }
         return lowestIndex(Arrays.asList(node.bin, searchFirstBin(size,node.left), searchFirstBin(size,node.right)));
     }
 
@@ -291,13 +284,6 @@ public class AVLTree {
         }
         if (!node.bin.fits(size)) {
             return searchBestBin(size, node.right);
-        }
-        if (node.bin.getCapacityLeft() == size) {
-            if (node.left != null && node.left.bin.getCapacityLeft() == size) {
-                return searchBestBin(size, node.left);
-            } else {
-                return node.bin;
-            }
         }
         Bin down = searchBestBin(size, node.left);
         if (down == null) {
