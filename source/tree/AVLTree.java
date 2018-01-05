@@ -2,7 +2,8 @@ package tree;
 
 import bin.Bin;
 
-import static java.lang.Math.abs;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Un arbre AVL utilisé pour stocker les bins au cours des algorithmes.
@@ -240,33 +241,34 @@ public class AVLTree {
      * @param size la taille de l'objet à insérer
      */
     public Bin searchFirstBin(int size) {
-        return searchFirstBin(size, root, null);
+        return searchFirstBin(size, root);
     }
 
-    private Bin searchFirstBin(int size, Node node, Node min) {
+    private Bin searchFirstBin(int size, Node node) {
         if (node == null) {
-            if (min != null) {
-                return min.bin;
-            }
             return null;
         }
         if (!node.bin.fits(size)) {
-            return searchFirstBin(size, node.right, min);
+            return searchFirstBin(size, node.right);
         }
         if (node.bin.getCapacityLeft() == size) {
             if (node.left != null && node.left.bin.getCapacityLeft() == size) {
-                return searchFirstBin(size, node.left, null);
+                return searchFirstBin(size, node.left);
             } else {
                 return node.bin;
             }
         }
-        if (min == null || node.bin.getIndex() < min.bin.getIndex()) {
-            min = node;
+        return lowestIndex(Arrays.asList(node.bin, searchFirstBin(size,node.left), searchFirstBin(size,node.right)));
+    }
+
+    private Bin lowestIndex(List<Bin> list) {
+        Bin min = null;
+        for (Bin bin: list) {
+            if (min == null || (bin != null && bin.getIndex() < min.getIndex()) ) {
+                min = bin;
+            }
         }
-        if (node.left == null) {
-            return min.bin;
-        }
-        return searchFirstBin(size, node.left, min);
+        return min;
     }
 
     // -----------------------------------------------------------------------------------------
@@ -280,33 +282,32 @@ public class AVLTree {
      * @param size la taille de l'objet à insérer
      */
     public Bin searchBestBin(int size) {
-        return searchBestBin(size, root, null);
+        return searchBestBin(size, root);
     }
 
-    private Bin searchBestBin(int size, Node node, Node best) {
+    private Bin searchBestBin(int size, Node node) {
         if (node == null) {
-            if (best != null) {
-                return best.bin;
-            }
             return null;
         }
         if (!node.bin.fits(size)) {
-            return searchBestBin(size, node.right, best);
+            return searchBestBin(size, node.right);
         }
         if (node.bin.getCapacityLeft() == size) {
             if (node.left != null && node.left.bin.getCapacityLeft() == size) {
-                return searchBestBin(size, node.left, null);
+                return searchBestBin(size, node.left);
             } else {
                 return node.bin;
             }
         }
-        if (best == null || abs(size - node.bin.getCapacityLeft()) < abs(size - best.bin.getCapacityLeft())) {
-            best = node;
+        Bin down = searchBestBin(size, node.left);
+        if (down == null) {
+            return node.bin;
         }
-        if (node.left == null) {
-            return best.bin;
+        if (size - down.getCapacityLeft() < size - node.bin.getCapacityLeft()) {
+            return down;
+        } else {
+            return node.bin;
         }
-        return searchBestBin(size, node.left, best);
     }
 
     // -----------------------------------------------------------------------------------------
