@@ -23,12 +23,7 @@ stat.ex:
 	@echo "#!/bin/bash\njava -jar BinPacking.jar -random -bench" > stat.ex
 	chmod u+x stat.ex
 
-clean: 
-	$(RM) out/algo/*.class
-	$(RM) out/tree/*.class
-	$(RM) out/bin/*.class
-	$(RM) out/context/*.class
-	$(RM) out/*.class
+clean:
 	$(RM) algo.ex
 	$(RM) stat.ex
 	$(RM) BinPacking.jar
